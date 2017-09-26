@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "752262249860",
+    "firebase_url": "https://gofirebaseproject-a69cb.firebaseio.com",
+    "project_id": "gofirebaseproject-a69cb",
+    "storage_bucket": "gofirebaseproject-a69cb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752262249860:android:638a80f3e116590b",
+        "android_client_info": {
+          "package_name": "com.coma.go"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "752262249860-0vh93eevbq6i3vl52fr9unlbf2tkiir5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.coma.go",
+            "certificate_hash": "474c7cc6376e71da2708c76e621c8f3e046cc5ee"
+          }
+        },
+        {
+          "client_id": "752262249860-do4omo6m6fvnbtq3v0ei859fj4cqeeiq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1lU1lbNH87Z7lRYYE65OQApFqJOBWbp4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752262249860-do4omo6m6fvnbtq3v0ei859fj4cqeeiq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
