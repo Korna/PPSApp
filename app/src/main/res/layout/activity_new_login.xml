@@ -6,45 +6,81 @@
     android:layout_height="match_parent"
     tools:context="com.coma.go.View.NewLoginActivity">
 
-    <EditText
-        android:id="@+id/editText_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/editText_pass"
-        android:layout_alignStart="@+id/editText_pass"
-        android:ems="10"
-        android:hint="Почта"
-        android:inputType="textPersonName"
-        android:text="artem-koma@yandex.kz"
-        tools:layout_editor_absoluteX="83dp"
-        tools:layout_editor_absoluteY="232dp" />
+    <RelativeLayout
+        android:id="@+id/layout_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
 
-    <EditText
-        android:id="@+id/editText_pass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:ems="10"
-        android:hint="Пароль"
-        android:inputType="textPassword"
-        android:text="123456"
-        tools:layout_editor_absoluteX="83dp"
-        tools:layout_editor_absoluteY="300dp" />
+        <ProgressBar
+            android:id="@+id/progressBar_signup"
+            style="@android:style/Widget.Holo.ProgressBar.Large"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
 
-    <Button
-        android:id="@+id/button_signup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/editText_pass"
-        android:layout_below="@+id/editText_pass"
-        android:text="SignUp" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/progressBar_signup"
+            android:layout_centerHorizontal="true"
+            android:text="Loading"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
 
-    <Button
-        android:id="@+id/button_register_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/editText_pass"
-        android:layout_below="@+id/editText_pass"
-        android:text="Register" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_signup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <Button
+            android:id="@+id/button_register_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/editText_pass"
+            android:layout_below="@+id/editText_pass"
+            android:text="Register" />
+
+        <Button
+            android:id="@+id/button_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/editText_pass"
+            android:layout_below="@+id/editText_pass"
+            android:text="SignUp" />
+
+        <EditText
+            android:id="@+id/editText_pass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:ems="10"
+            android:hint="Пароль"
+            android:inputType="textPassword"
+            android:text="123456"
+            tools:layout_editor_absoluteX="83dp"
+            tools:layout_editor_absoluteY="300dp" />
+
+        <EditText
+            android:id="@+id/editText_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/editText_pass"
+            android:layout_alignStart="@+id/editText_pass"
+            android:ems="10"
+            android:hint="Почта"
+            android:inputType="textPersonName"
+            android:text="artem-koma@yandex.kz"
+            tools:layout_editor_absoluteX="83dp"
+            tools:layout_editor_absoluteY="232dp" />
+
+    </RelativeLayout>
+
 </RelativeLayout>

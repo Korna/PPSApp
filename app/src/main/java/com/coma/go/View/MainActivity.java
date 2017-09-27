@@ -20,6 +20,7 @@ import android.widget.ListView;
 import com.coma.go.Custom.EventAdapter;
 import com.coma.go.Model.Event;
 import com.coma.go.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +39,11 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                Intent intent = new Intent(getApplicationContext(), NewEventActivity.class);
+                startActivity(intent);
+
+               // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
 
@@ -116,10 +120,14 @@ public class MainActivity extends AppCompatActivity
 
         switch(id){
             case R.id.nav_dialogs:
-                Intent intent = new Intent(getApplicationContext(), NewEventActivity.class);
-                startActivity(intent);
+
                 break;
-            case R.id.nav_events:
+            case R.id.nav_quit:
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
+                finish();
+                Intent intentLogin = new Intent(getApplicationContext(), NewLoginActivity.class);
+                startActivity(intentLogin);
                 break;
         }
 

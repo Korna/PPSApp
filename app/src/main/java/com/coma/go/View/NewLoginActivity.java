@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.coma.go.Model.User;
@@ -44,13 +46,21 @@ public class NewLoginActivity extends AppCompatActivity {
     Singleton instance = Singleton.getInstance();
 
     FirebaseUser firebaseUser = null;
+
+    RelativeLayout layout_signup;
+    RelativeLayout layout_loading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_login);
 
+        layout_signup = (RelativeLayout) findViewById(R.id.layout_signup);
+        layout_loading = (RelativeLayout) findViewById(R.id.layout_loading);
 
 
+
+        layout_signup.setVisibility(View.INVISIBLE);
+        layout_loading.setVisibility(View.VISIBLE);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -61,7 +71,15 @@ public class NewLoginActivity extends AppCompatActivity {
                 firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
                     Log.d("init", "onAuthStateChanged:signed_in:" + firebaseUser.getUid());
+                    proceedToMainActivity(firebaseUser.getUid());
+
+
+
                 } else {
+
+                    layout_signup.setVisibility(View.VISIBLE);
+                    layout_loading.setVisibility(View.INVISIBLE);
+
                     Log.d("init", "onAuthStateChanged:signed_out");
                 }
 
@@ -124,11 +142,9 @@ public class NewLoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
-
                             AuthResult authResult = task.getResult();
                             taskCompletionSource.setResult(authResult);
 
-                            // instance.userData = FBHandler.createNewUserData();
                             Toast.makeText(NewLoginActivity.this, "Регистрация прошла успешно", Toast.LENGTH_SHORT).show();
                             //TODO offerToUpdateAccountData();
 
@@ -144,6 +160,10 @@ public class NewLoginActivity extends AppCompatActivity {
 
 
     private void signUp(String email, String password){
+
+        layout_signup.setVisibility(View.INVISIBLE);
+        layout_loading.setVisibility(View.VISIBLE);
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -152,31 +172,8 @@ public class NewLoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             AuthResult authResult = task.getResult();
                             String uid = authResult.getUser().getUid();
-                            Task taskUser = getUserTask(uid).getTask();
 
-                            taskUser.addOnCompleteListener(new OnCompleteListener() {
-                                @Override
-                                public void onComplete(@NonNull Task task) {
-
-
-
-                                    if(task.isSuccessful()){
-                                        User user = (User) task.getResult();
-                                        Singleton singleton = Singleton.getInstance();
-                                        singleton.setUser(user);
-
-                                        Toast.makeText(NewLoginActivity.this, "Succeed", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }else{
-
-                                        Toast.makeText(NewLoginActivity.this, "Not found info on server", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                }
-                            });
-
+                            proceedToMainActivity(uid);
 
 
 
@@ -252,6 +249,37 @@ public class NewLoginActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    private void proceedToMainActivity(String uid){
+
+
+
+        Task taskUser = getUserTask(uid).getTask();
+
+        taskUser.addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+
+
+
+                if(task.isSuccessful()){
+                    User user = (User) task.getResult();
+                    Singleton singleton = Singleton.getInstance();
+                    singleton.setUser(user);
+
+                    Toast.makeText(NewLoginActivity.this, "Succeed", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    layout_signup.setVisibility(View.VISIBLE);
+                    layout_loading.setVisibility(View.INVISIBLE);
+                    Toast.makeText(NewLoginActivity.this, "Not found info on server", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
 
 }

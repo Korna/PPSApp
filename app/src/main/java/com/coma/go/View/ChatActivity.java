@@ -1,6 +1,5 @@
 package com.coma.go.View;
 
-import android.icu.text.SimpleDateFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.coma.go.Custom.ChatAdapter;
 import com.coma.go.Model.Conversation;
@@ -21,13 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-import static com.coma.go.Misc.Constants.FB_DIRECTORY_MESSAGES;
-import static com.coma.go.Misc.Constants.FB_DIRECTORY_USERS;
+import static com.coma.go.Misc.Constants.FB_DIRECTORY_CONVERSATIONS;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -74,7 +68,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 String cid = "conversation1";
 
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_MESSAGES);
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_CONVERSATIONS);
 
                 ref.child(cid).setValue(message);
 
@@ -85,7 +79,7 @@ public class ChatActivity extends AppCompatActivity {
     }
     Conversation conversation;
     public Conversation getConversation(String cid){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_MESSAGES);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_CONVERSATIONS);
 
         ref.child(cid).addListenerForSingleValueEvent(//глобальный и постоянный прослушиватель всех данных marks
                 new ValueEventListener() {

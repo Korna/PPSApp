@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class User extends WebInfo {
     ArrayList<Conversation> conversations = new ArrayList<>();
     public UserInfo userInfo = new UserInfo();
-    ArrayList<Event> participation = new ArrayList<>();
+    public ArrayList<Event> participation = new ArrayList<>();
     public User(){
 
     }

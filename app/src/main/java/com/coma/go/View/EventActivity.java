@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.coma.go.Model.Event;
 import com.coma.go.R;
@@ -49,6 +50,8 @@ public class EventActivity extends AppCompatActivity {
                 Singleton singleton = Singleton.getInstance();
                 singleton.user.getParticipation().add(event);
                 FBIO.createUserInfo(singleton.user.userInfo.getUid(), singleton.user);
+                Toast.makeText(EventActivity.this, "Вы учавствуете в этом мероприятии", Toast.LENGTH_SHORT).show();
+                //TODO вы уже учавствуете в этом мероприятии!
             }
         });
 

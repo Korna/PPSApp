@@ -11,10 +11,11 @@ public class Event extends WebInfo implements Serializable {
 
     String author_id;
     String photo_id;
-    ArrayList<String> participants = new ArrayList<>();
+    public ArrayList<String> participants = new ArrayList<>();
     String name;
     String description;
     String time;
+    String category;
 
     //ArrayList<String> moderatorsList;
 
@@ -58,4 +59,9 @@ public class Event extends WebInfo implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
 }
