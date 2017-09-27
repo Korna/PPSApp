@@ -14,6 +14,7 @@ public class Event extends WebInfo implements Serializable {
     ArrayList<String> participants = new ArrayList<>();
     String name;
     String description;
+    String time;
 
     //ArrayList<String> moderatorsList;
 

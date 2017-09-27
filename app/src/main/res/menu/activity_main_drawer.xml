@@ -5,19 +5,19 @@
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:title="Мой профиль" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_dialogs"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:title="Диалоги" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="Все события" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_events"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="Мои события" />
     </group>
 
     <item android:title="Communicate">
@@ -25,7 +25,7 @@
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="Настройки" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"

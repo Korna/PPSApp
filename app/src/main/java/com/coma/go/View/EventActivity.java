@@ -9,11 +9,13 @@ import android.widget.TextView;
 
 import com.coma.go.Model.Event;
 import com.coma.go.R;
+import com.coma.go.Service.FBIO;
+import com.coma.go.Service.Singleton;
 
 public class EventActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
@@ -38,6 +40,15 @@ public class EventActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
                 intent.putExtra("clickedEvent", event);
                 startActivity(intent);
+            }
+        });
+
+        buttonJoin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Singleton singleton = Singleton.getInstance();
+                singleton.user.getParticipation().add(event);
+                FBIO.createUserInfo(singleton.user.userInfo.getUid(), singleton.user);
             }
         });
 

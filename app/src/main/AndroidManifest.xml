@@ -32,7 +32,13 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".View.EventActivity" />
-        <activity android:name=".View.ChatActivity"></activity>
+        <activity android:name=".View.ChatActivity" />
+        <activity android:name=".View.NewEventActivity" />
+        <activity
+            android:name=".View.LoadingActivity"
+            android:label="@string/title_activity_loading"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".View.NewLoginActivity"></activity>
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.coma.go.View;
 
+import android.icu.text.SimpleDateFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,13 +14,16 @@ import com.coma.go.Custom.ChatAdapter;
 import com.coma.go.Model.Conversation;
 import com.coma.go.Model.Message;
 import com.coma.go.R;
+import com.coma.go.Service.Singleton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.coma.go.Misc.Constants.FB_DIRECTORY_MESSAGES;
@@ -53,14 +57,26 @@ public class ChatActivity extends AppCompatActivity {
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String msgText = editTextMessage.getText().toString();
+                editTextMessage.setText("");
+
                 Message message = new Message();
-                message.setMessage(editTextMessage.getText().toString());
+                message.setMessage(msgText);
+                message.setReaded(false);
 
-                String uid = "user1";
+                Singleton singleton = Singleton.getInstance();
+                String uid = singleton.user.getId();
+                message.setSender(uid);
 
-               // DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_MESSAGES);
+                String s  = "date.2017";
 
-               // ref.child(uid).child(FB_DIRECTORY_CHARS).setValue(message);
+                message.setTime(s);
+
+                String cid = "conversation1";
+
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_MESSAGES);
+
+                ref.child(cid).setValue(message);
 
 
 
