@@ -38,7 +38,10 @@
             android:name=".View.LoadingActivity"
             android:label="@string/title_activity_loading"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".View.NewLoginActivity"></activity>
+        <activity android:name=".View.NewLoginActivity" />
+        <activity android:name=".View.EventListActivity" />
+        <activity android:name=".View.ProfileActivity" />
+        <activity android:name=".View.ConversationsActivity"></activity>
     </application>
 
 </manifest>

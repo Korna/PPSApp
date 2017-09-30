@@ -14,16 +14,16 @@ import com.coma.go.R;
 import java.util.List;
 
 /**
- * Created by Koma on 26.09.2017.
+ * Created by Koma on 29.09.2017.
  */
 
-public class ChatAdapter extends ArrayAdapter<Message> {
+public class MessageAdapter extends ArrayAdapter<Message> {
 
     private Activity activity;
     public List<Message> questList;
 
 
-    public ChatAdapter(Activity context, List<Message> questList){
+    public MessageAdapter(Activity context, List<Message> questList){
         super(context, R.layout.row_message, questList);
         this.activity = context;
         this.questList = questList;

@@ -1,10 +1,12 @@
 package com.coma.go.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by Koma on 26.09.2017.
  */
 
-public class UserInfo {
+public class UserInfo implements Serializable{
     String uid;
     String nickname;
     String photo;

@@ -14,14 +14,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignStart="@+id/textView_event_name"
-            android:layout_below="@+id/textView_event_name"
+            android:layout_alignStart="@+id/textView_conversation_name"
+            android:layout_below="@+id/textView_conversation_name"
             android:layout_marginTop="13dp"
             android:text="Описание"
             android:layout_alignParentBottom="true" />
 
         <TextView
-            android:id="@+id/textView_event_name"
+            android:id="@+id/textView_conversation_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/imageView_profile"
@@ -46,6 +46,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/imageView_profile"
             android:layout_toStartOf="@+id/textView_description" />
+
+        <ImageView
+            android:id="@+id/imageView_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/textView_conversation_name"
+            android:visibility="invisible"
+            app:srcCompat="@android:drawable/btn_dialog" />
 
     </RelativeLayout>
 

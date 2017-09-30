@@ -267,6 +267,7 @@ public class NewLoginActivity extends AppCompatActivity {
                     User user = (User) task.getResult();
                     Singleton singleton = Singleton.getInstance();
                     singleton.setUser(user);
+                    Log.i("uid", user.userInfo.getUid());
 
                     Toast.makeText(NewLoginActivity.this, "Succeed", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);

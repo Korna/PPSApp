@@ -39,10 +39,10 @@ public class NewEventActivity extends AppCompatActivity {
 
 
                 Singleton singleton = Singleton.getInstance();
-                String id = singleton.user.getId();
+                String id = singleton.user.userInfo.getUid();
 
                 Event event = new Event();
-                event.setId(id);
+                event.setAuthor_id(id);
                 event.setName(name);
                 event.setDescription(description);
 

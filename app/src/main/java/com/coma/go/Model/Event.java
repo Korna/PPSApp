@@ -64,4 +64,7 @@ public class Event extends WebInfo implements Serializable {
         this.category = category;
     }
 
+    public String getCategory() {
+        return category;
+    }
 }

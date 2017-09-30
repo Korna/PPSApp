@@ -20,6 +20,8 @@ import android.widget.ListView;
 import com.coma.go.Custom.EventAdapter;
 import com.coma.go.Model.Event;
 import com.coma.go.R;
+import com.coma.go.Service.FBIO;
+import com.coma.go.Service.Singleton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -59,25 +61,13 @@ public class MainActivity extends AppCompatActivity
 
         ListView listViewEvents = (ListView) findViewById(R.id.listView_events);
 
+        EventAdapter questAdapter = new EventAdapter(this, new ArrayList<Event>(), "Public");
 
-        EventAdapter questAdapter = new EventAdapter(this, createMockList());
         listViewEvents.setAdapter(questAdapter);
 
     }
 
-    private List<Event> createMockList() {
-        List<Event> items = new ArrayList<>();
-        for (int i = 1; i <=20; i++) {
-            Drawable d = ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.ic_delete);//хранящее в памяти значение . нах сейчас надо, если всё равно меняется при показе?
 
-            Event modelView = new Event();
-            modelView.setId("mockId");
-            modelView.setName("Event "+i);
-            modelView.setDescription("Sample Description");
-            items.add(modelView);
-        }
-        return items;
-    }
 
 
     @Override
@@ -120,7 +110,8 @@ public class MainActivity extends AppCompatActivity
 
         switch(id){
             case R.id.nav_dialogs:
-
+                Intent intentConversations = new Intent(getApplicationContext(), ConversationsActivity.class);
+                startActivity(intentConversations);
                 break;
             case R.id.nav_quit:
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -129,6 +120,20 @@ public class MainActivity extends AppCompatActivity
                 Intent intentLogin = new Intent(getApplicationContext(), NewLoginActivity.class);
                 startActivity(intentLogin);
                 break;
+            case R.id.nav_events:
+                Intent intentMyEvents = new Intent(getApplicationContext(), EventListActivity.class);
+                startActivity(intentMyEvents);
+                break;
+            case R.id.nav_profile:
+                Intent intentMyProfile = new Intent(getApplicationContext(), ProfileActivity.class);
+
+                Singleton singleton = Singleton.getInstance();
+                intentMyProfile.putExtra("clickedEvent", singleton.user.userInfo);
+
+                startActivity(intentMyProfile);
+                break;
+
+
         }
 
 
