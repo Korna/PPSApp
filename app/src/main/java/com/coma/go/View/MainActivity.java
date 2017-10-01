@@ -1,5 +1,6 @@
 package com.coma.go.View;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +20,9 @@ import android.widget.ListView;
 import com.coma.go.Custom.EventAdapter;
 import com.coma.go.Model.Event;
 import com.coma.go.R;
+import com.coma.go.Service.FBIO;
+import com.coma.go.Service.Singleton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,15 +41,18 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                Intent intent = new Intent(getApplicationContext(), NewEventActivity.class);
+                startActivity(intent);
+
+               // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        //drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -54,25 +61,13 @@ public class MainActivity extends AppCompatActivity
 
         ListView listViewEvents = (ListView) findViewById(R.id.listView_events);
 
+        EventAdapter questAdapter = new EventAdapter(this, new ArrayList<Event>(), "Public");
 
-        EventAdapter questAdapter = new EventAdapter(this, createMockList());
         listViewEvents.setAdapter(questAdapter);
 
     }
 
-    private List<Event> createMockList() {
-        List<Event> items = new ArrayList<>();
-        for (int i = 1; i <=20; i++) {
-            Drawable d = ContextCompat.getDrawable(getApplicationContext(), android.R.drawable.ic_delete);//хранящее в памяти значение . нах сейчас надо, если всё равно меняется при показе?
 
-            Event modelView = new Event();
-            modelView.setId("mockId");
-            modelView.setName("Event "+i);
-            modelView.setDescription("Sample Description");
-            items.add(modelView);
-        }
-        return items;
-    }
 
 
     @Override
@@ -113,19 +108,36 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        switch(id){
+            case R.id.nav_dialogs:
+                Intent intentConversations = new Intent(getApplicationContext(), ConversationsActivity.class);
+                startActivity(intentConversations);
+                break;
+            case R.id.nav_quit:
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
+                finish();
+                Intent intentLogin = new Intent(getApplicationContext(), NewLoginActivity.class);
+                startActivity(intentLogin);
+                break;
+            case R.id.nav_events:
+                Intent intentMyEvents = new Intent(getApplicationContext(), EventListActivity.class);
+                startActivity(intentMyEvents);
+                break;
+            case R.id.nav_profile:
+                Intent intentMyProfile = new Intent(getApplicationContext(), ProfileActivity.class);
 
-        } else if (id == R.id.nav_slideshow) {
+                Singleton singleton = Singleton.getInstance();
+                intentMyProfile.putExtra("clickedEvent", singleton.user.userInfo);
 
-        } else if (id == R.id.nav_manage) {
+                startActivity(intentMyProfile);
+                break;
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
+
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

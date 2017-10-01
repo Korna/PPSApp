@@ -16,7 +16,7 @@ public class Singleton {
     private Singleton() {
     }
 
-    User user;
+    public User user;
     public void setUser(User user){
         this.user =  user;
     }

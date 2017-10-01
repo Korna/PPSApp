@@ -2,17 +2,19 @@ package com.coma.go.View;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.coma.go.Custom.ChatAdapter;
+import com.coma.go.Custom.MessageAdapter;
 import com.coma.go.Model.Conversation;
+import com.coma.go.Model.Event;
 import com.coma.go.Model.Message;
 import com.coma.go.R;
+import com.coma.go.Service.Singleton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,16 +22,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static com.coma.go.Misc.Constants.FB_DIRECTORY_MESSAGES;
-import static com.coma.go.Misc.Constants.FB_DIRECTORY_USERS;
+import static com.coma.go.Misc.Constants.FB_DIRECTORY_CONVERSATIONS;
 
 public class ChatActivity extends AppCompatActivity {
 
-
-
-
+    Conversation conversation;
+    String cid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,36 +39,68 @@ public class ChatActivity extends AppCompatActivity {
 
         final EditText editTextMessage = (EditText) findViewById(R.id.editText_message);
         ListView listView = (ListView) findViewById(R.id.listView_message_history);
-        ArrayList<Message> messageList = new ArrayList<>();
 
-        ChatAdapter chatAdapter = new ChatAdapter(this, messageList);
+
+        try {
+            conversation = (Conversation) getIntent().getSerializableExtra("Conversation");
+            cid  = conversation.getCid();
+        }catch(NullPointerException npe){
+            Log.e("npe", npe.toString());
+            conversation = new Conversation();
+            cid = "SampleConv";
+        }
+
+        MessageAdapter chatAdapter = new MessageAdapter(this, conversation.getMessageHistory());
         listView.setAdapter(chatAdapter);
 
 
 
+
+
+
+
+
         Button buttonSend = (Button) findViewById(R.id.button_send);
-
-
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String msgText = editTextMessage.getText().toString();
+                editTextMessage.setText("");
+
                 Message message = new Message();
-                message.setMessage(editTextMessage.getText().toString());
+                message.setMessage(msgText);
+                message.setReaded(false);
 
-                String uid = "user1";
+                Singleton singleton = Singleton.getInstance();
+                String uid = singleton.user.getId();
+                message.setSender(uid);
 
-               // DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_MESSAGES);
+                String s  = "date.2017";
+                message.setTime(s);
 
-               // ref.child(uid).child(FB_DIRECTORY_CHARS).setValue(message);
+
+
+                conversation.getMessageHistory().add(message);//может быть по времени рассинхрон.
+
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_CONVERSATIONS);
+
+                ref.child(cid).setValue(conversation);
 
 
 
             }
         });
     }
-    Conversation conversation;
+
+    private void prepareSend(String msgText){
+
+
+    }
+
+/*
+
     public Conversation getConversation(String cid){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_MESSAGES);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_CONVERSATIONS);
 
         ref.child(cid).addListenerForSingleValueEvent(//глобальный и постоянный прослушиватель всех данных marks
                 new ValueEventListener() {
@@ -85,7 +116,7 @@ public class ChatActivity extends AppCompatActivity {
                 });
 
         return conversation;
-    }
+    }*/
 
 
 }
