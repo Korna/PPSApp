@@ -84,7 +84,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_CONVERSATIONS);
 
-                ref.child(cid).setValue(conversation.getMessageHistory());
+                ref.child(cid).setValue(conversation);
 
 
 

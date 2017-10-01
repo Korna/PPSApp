@@ -68,21 +68,22 @@ public class EventAdapter extends ArrayAdapter<Event> {
         //imageViewPhoto.setImageDrawable(drawable);
 
 
-        if(eventList.get(position)!= null)
-            if(eventList.get(position).getAuthor_id().equals(singleton.user.userInfo.getUid())){
-                    ImageView imageViewDelete = (ImageView) row.findViewById(R.id.imageView_delete);
-                    imageViewDelete.setVisibility(View.VISIBLE);
-                    imageViewDelete.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+        if(singleton.user != null)
+            if(eventList.get(position)!= null)
+                if(eventList.get(position).getAuthor_id().equals(singleton.user.userInfo.getUid())){
+                        ImageView imageViewDelete = (ImageView) row.findViewById(R.id.imageView_delete);
+                        imageViewDelete.setVisibility(View.VISIBLE);
+                        imageViewDelete.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                            singleton.user.participation.remove(eventList.get(position));
-                            FBIO.deleteEvent(null, eventList.get(position).getCategory(), eventList.get(position).getId());
-                            eventList.remove(position);
-                            refreshAdapter();
-                        }
-                    });
-                }
+                                singleton.user.participation.remove(eventList.get(position));
+                                FBIO.deleteEvent(null, eventList.get(position).getCategory(), eventList.get(position).getId());
+                                eventList.remove(position);
+                                refreshAdapter();
+                            }
+                        });
+                    }
 
 
 

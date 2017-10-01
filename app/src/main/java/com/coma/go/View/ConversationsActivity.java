@@ -1,5 +1,6 @@
 package com.coma.go.View;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,8 @@ import com.coma.go.Model.Event;
 import com.coma.go.R;
 import com.coma.go.Service.FBIO;
 import com.coma.go.Service.Singleton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,20 +37,28 @@ public class ConversationsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversations);
-        Singleton singleton = Singleton.getInstance();
+        final Singleton singleton = Singleton.getInstance();
 
-        cidList = FBIO.getMyCids(singleton.user.userInfo.getUid());
+        Task task = FBIO.getMyCids(singleton.user.userInfo.getUid()).getTask();
+        task.addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                cidList = (ArrayList<String>) task.getResult();
+                getMyConversations(singleton.user.userInfo.getUid());
 
+            }
+        });
 
-        conversationAdapter = new ConversationAdapter(this, getMyConversations(singleton.user.userInfo.getUid()));
+        conversationAdapter = new ConversationAdapter(this, listConversations);
 
         ListView listView = (ListView) findViewById(R.id.listView_conversations);
         listView.setAdapter(conversationAdapter);
 
     }
 
+    ArrayList<Conversation> listConversations = new ArrayList<>();
     public ArrayList<Conversation> getMyConversations(String uid){//можно создать таблицу title of COnversation для view(меньше трафика)
-        final ArrayList<Conversation> listConversations = new ArrayList<>();
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_CONVERSATIONS);
 
         for(String string : cidList){

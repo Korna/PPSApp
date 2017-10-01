@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import com.coma.go.Model.Conversation;
 import com.coma.go.R;
+import com.coma.go.Service.FBIO;
 import com.coma.go.View.ChatActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
@@ -47,10 +50,12 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         buttonChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(getContext(), ChatActivity.class);
                 intent.putExtra("Conversation", conversationList.get(position));
                 getContext().startActivity(intent);
-                conversationList.get(position).getCid();
+
+
 
 
 

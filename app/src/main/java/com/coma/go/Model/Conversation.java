@@ -13,6 +13,9 @@ public class Conversation extends WebInfo implements Serializable{
     ArrayList<String> participants;//including admins
     ArrayList<Message> messageHistory = new ArrayList<>();
     String cid;
+    public Conversation(){
+
+    }
 
     public ArrayList<String> getAdmins() {
         return admins;
@@ -48,5 +51,9 @@ public class Conversation extends WebInfo implements Serializable{
 
     public String getCid() {
         return cid;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -1,10 +1,12 @@
 package com.coma.go.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by Koma on 26.09.2017.
  */
 
-public class Message {
+public class Message implements Serializable{
 
     private String sender;
     private String message;
