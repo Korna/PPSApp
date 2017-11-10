@@ -306,13 +306,10 @@ public class FBIO {
     public static void deleteEvent(String uid, String category, final String key){
         DatabaseReference ref;
         ref = FirebaseDatabase.getInstance().getReference();
-
-
         TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
 
 
         Task deleteTaskGlobal = ref.child(FB_DIRECTORY_EVENTS).child(category).child(key).removeValue();
-
 
 
 

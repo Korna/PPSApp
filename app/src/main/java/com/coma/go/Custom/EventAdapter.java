@@ -46,66 +46,71 @@ public class EventAdapter extends ArrayAdapter<Event> {
         this.eventList = eventList;
         this.activity = context;
         this.category = category;
+
         if(category.equals("My")){
             String uid = singleton.user.userInfo.getUid();
             getMyEvents(uid);
-        }
-        else{
+        } else{
             getEvents();
         }
-
     }
 
     @NonNull
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {// TODO здесь может быть баг, если удалили мероприятие во время просмотра
         LayoutInflater inflater = activity.getLayoutInflater();
 
         View row = inflater.inflate(R.layout.row_event, null, true);
 
         ImageView imageViewPhoto = (ImageView) row.findViewById(R.id.imageView);
-       //Drawable d = getPhotoById(eventList.get(position).getPhoto_id());
-        //imageViewPhoto.setImageDrawable(drawable);
-
-
-        if(singleton.user != null)
-            if(eventList.get(position)!= null)
-                if(eventList.get(position).getAuthor_id().equals(singleton.user.userInfo.getUid())){
-                        ImageView imageViewDelete = (ImageView) row.findViewById(R.id.imageView_delete);
-                        imageViewDelete.setVisibility(View.VISIBLE);
-                        imageViewDelete.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                singleton.user.participation.remove(eventList.get(position));
-                                FBIO.deleteEvent(null, eventList.get(position).getCategory(), eventList.get(position).getId());
-                                eventList.remove(position);
-                                refreshAdapter();
-                            }
-                        });
-                    }
-
-
-
         TextView textViewName = (TextView) row.findViewById(R.id.textView_conversation_name);
         TextView textViewDesc = (TextView) row.findViewById(R.id.textView_description);
         Button buttonGetQuest = (Button) row.findViewById(R.id.button_info);
 
-        textViewName.setText(eventList.get(position).getName());
-        textViewDesc.setText(eventList.get(position).getDescription());
+        final Event event = eventList.get(position);
+
+        try {
+            if (singleton.user != null)
+                if (event.getAuthor_id().equals(singleton.user.userInfo.getUid())) {
+                    ImageView imageViewDelete = (ImageView) row.findViewById(R.id.imageView_delete);
+                    imageViewDelete.setVisibility(View.VISIBLE);
+                    imageViewDelete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            singleton.user.participation.remove(event);
+                            FBIO.deleteEvent(null, event.getCategory(), eventList.get(position).getId());
+                            eventList.remove(position);
+                            refreshAdapter();
+                        }
+                    });
+                }
+
+            textViewName.setText(event.getName());
+            textViewDesc.setText(event.getDescription());
+
+        } catch(NullPointerException npe){
+                Log.e("getView", npe.toString());
+
+            textViewName.setText(null);
+            textViewDesc.setText(null);
+            }
+
 
         buttonGetQuest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event event = eventList.get(position);
-
-                Intent intent = new Intent(getContext(), EventActivity.class);
-                intent.putExtra("clickedEvent", event);
-                activity.startActivity(intent);
-
-
+                if(event != null) {
+                    Intent intent = new Intent(getContext(), EventActivity.class);
+                    intent.putExtra("clickedEvent", event);
+                    activity.startActivity(intent);
+                }
             }
         });
+
+
+
+
 
 
 

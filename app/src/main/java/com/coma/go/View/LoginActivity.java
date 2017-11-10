@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
 
-        // Set up the login form.
+
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
 
@@ -86,7 +86,6 @@ public class LoginActivity extends AppCompatActivity  {
                     attemptLogin();
                     return true;
                 }
-
                 return false;
             }
         });

@@ -56,13 +56,61 @@ public class NewLoginActivity extends AppCompatActivity {
 
         layout_signup = (RelativeLayout) findViewById(R.id.layout_signup);
         layout_loading = (RelativeLayout) findViewById(R.id.layout_loading);
+        layout_signup.setVisibility(View.INVISIBLE);
+        layout_loading.setVisibility(View.VISIBLE);
+        textEmail = (EditText) findViewById(R.id.editText_email);
+        textPass = (EditText) findViewById(R.id.editText_pass);
+
+        setListener();
 
 
+        buttonRegister = (Button) findViewById(R.id.button_register_user);
+        buttonRegister.setOnClickListener(new View.OnClickListener(){
 
+            @Override
+            public void onClick(View view){
+              clickRegister();
+            }
+        });
+
+        buttonSignUp = (Button) findViewById(R.id.button_signup);
+        buttonSignUp.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view){
+               clickSignUp();
+            }
+        });
+    }
+
+    private void clickSignUp(){
+        String email = textEmail.getText().toString();
+        String pass = textPass.getText().toString();
+        textEmail.setText("");
+        textPass.setText("");
         layout_signup.setVisibility(View.INVISIBLE);
         layout_loading.setVisibility(View.VISIBLE);
 
+        signUp(email, pass);
+    }
+    private void clickRegister(){
+        String email = textEmail.getText().toString();
+        String pass = textPass.getText().toString();
 
+        Task task = createAccount(email, pass).getTask();
+        task.addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                AuthResult authResult = (AuthResult) task.getResult();
+                String uid = authResult.getUser().getUid();
+                User user = new User(new UserInfo(uid, "nickname", "photo", "im fag", "spb"));
+                FBIO.createUserInfo(uid, user);
+            }
+        });
+
+    }
+
+    private void setListener(){
         mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -72,64 +120,14 @@ public class NewLoginActivity extends AppCompatActivity {
                 if (firebaseUser != null) {
                     Log.d("init", "onAuthStateChanged:signed_in:" + firebaseUser.getUid());
                     proceedToMainActivity(firebaseUser.getUid());
-
-
-
                 } else {
-
                     layout_signup.setVisibility(View.VISIBLE);
                     layout_loading.setVisibility(View.INVISIBLE);
-
                     Log.d("init", "onAuthStateChanged:signed_out");
                 }
 
             }
         };
-
-
-
-
-        textEmail = (EditText) findViewById(R.id.editText_email);
-        textPass = (EditText) findViewById(R.id.editText_pass);
-
-        buttonRegister = (Button) findViewById(R.id.button_register_user);
-        buttonRegister.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view){
-                String email = textEmail.getText().toString();
-                String pass = textPass.getText().toString();
-
-                Task task = createAccount(email, pass).getTask();
-                task.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        AuthResult authResult = (AuthResult) task.getResult();
-                        String uid = authResult.getUser().getUid();
-                        User user = new User(new UserInfo(uid, "nickname", "photo", "im fag", "spb"));
-                        FBIO.createUserInfo(uid, user);
-                    }
-                });
-
-
-
-               // String FBHandler = new UserDataFBHandler(mAuth.getCurrentUser().getUid());
-
-            }
-        });
-
-        buttonSignUp = (Button) findViewById(R.id.button_signup);
-        buttonSignUp.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view){
-                String email = textEmail.getText().toString();
-                String pass = textPass.getText().toString();
-                textEmail.setText("");
-                textPass.setText("");
-                signUp(email, pass);
-            }
-        });
     }
 
 
@@ -160,10 +158,6 @@ public class NewLoginActivity extends AppCompatActivity {
 
 
     private void signUp(String email, String password){
-
-        layout_signup.setVisibility(View.INVISIBLE);
-        layout_loading.setVisibility(View.VISIBLE);
-
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -186,23 +180,6 @@ public class NewLoginActivity extends AppCompatActivity {
 
 
     }
-
-    private void getCurrentUser(){
-        FirebaseUser user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // Name, email address, and profile photo Url
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-            Uri photoUrl = user.getPhotoUrl();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getToken() instead.
-            String uid = user.getUid();
-        }
-
-    }
-
 
 
     private TaskCompletionSource getUserTask(String uid){
@@ -237,30 +214,12 @@ public class NewLoginActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
     private void proceedToMainActivity(String uid){
-
-
-
         Task taskUser = getUserTask(uid).getTask();
 
         taskUser.addOnCompleteListener(new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
-
 
 
                 if(task.isSuccessful()){
@@ -281,6 +240,20 @@ public class NewLoginActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
 }

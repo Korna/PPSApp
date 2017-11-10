@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by Koma on 26.09.2017.
  */
 
-public class Message implements Serializable{
+public class Message extends WebInfo implements Serializable{
 
     private String sender;
     private String message;
