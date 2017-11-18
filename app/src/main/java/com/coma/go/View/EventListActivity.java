@@ -10,14 +10,20 @@ import com.coma.go.R;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class EventListActivity extends AppCompatActivity {
+
+    @Bind(R.id.listView_events)
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
+        ButterKnife.bind(this);
 
-        ListView listView = (ListView) findViewById(R.id.listView_events);
         EventAdapter eventAdapter = new EventAdapter(this, new ArrayList<Event>(), "My");
 
         listView.setAdapter(eventAdapter);

@@ -31,40 +31,42 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 import static com.coma.go.Misc.Constants.FB_DIRECTORY_USERS;
 
 public class NewLoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
-    private Button buttonRegister;
-    private Button buttonSignUp;
-
-    private EditText textEmail;
-    private EditText textPass;
+    @Bind(R.id.button_register_user)
+    Button buttonRegister;
+    @Bind(R.id.button_signup)
+    Button buttonSignUp;
+    @Bind(R.id.editText_email)
+    EditText textEmail;
+    @Bind(R.id.editText_pass)
+    EditText textPass;
 
     Singleton instance = Singleton.getInstance();
 
     FirebaseUser firebaseUser = null;
-
+    @Bind(R.id.layout_signup)
     RelativeLayout layout_signup;
+    @Bind(R.id.layout_loading)
     RelativeLayout layout_loading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_login);
 
-        layout_signup = (RelativeLayout) findViewById(R.id.layout_signup);
-        layout_loading = (RelativeLayout) findViewById(R.id.layout_loading);
+        ButterKnife.bind(this);
         layout_signup.setVisibility(View.INVISIBLE);
         layout_loading.setVisibility(View.VISIBLE);
-        textEmail = (EditText) findViewById(R.id.editText_email);
-        textPass = (EditText) findViewById(R.id.editText_pass);
 
         setListener();
 
 
-        buttonRegister = (Button) findViewById(R.id.button_register_user);
         buttonRegister.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -73,7 +75,6 @@ public class NewLoginActivity extends AppCompatActivity {
             }
         });
 
-        buttonSignUp = (Button) findViewById(R.id.button_signup);
         buttonSignUp.setOnClickListener(new View.OnClickListener(){
 
             @Override

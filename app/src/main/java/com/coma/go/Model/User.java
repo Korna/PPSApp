@@ -11,15 +11,11 @@ public class User extends WebInfo {
     public UserInfo userInfo = new UserInfo();
     public ArrayList<Event> participation = new ArrayList<>();
     public User(){
-
     }
-
-
     public User(UserInfo userInfo) {
         this.userInfo = userInfo;
         setId(userInfo.getUid());
     }
-
     public ArrayList<Event> getParticipation() {
         return participation;
     }

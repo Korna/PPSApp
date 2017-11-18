@@ -44,8 +44,4 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         textViewTime.setText(questList.get(position).getTime());
         return row;
     }
-
-
-
-
 }

@@ -23,6 +23,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 import static com.coma.go.Misc.Constants.FB_DIRECTORY_CONVERSATIONS;
 import static com.coma.go.Misc.Constants.FB_DIRECTORY_USERS;
 
@@ -33,11 +36,16 @@ public class ConversationsActivity extends AppCompatActivity {
 
     ConversationAdapter conversationAdapter;
 
+    @Bind(R.id.listView_conversations)
+    ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversations);
         final Singleton singleton = Singleton.getInstance();
+
+        ButterKnife.bind(this);
 
         Task task = FBIO.getMyCids(singleton.user.userInfo.getUid()).getTask();
         task.addOnCompleteListener(new OnCompleteListener() {
@@ -51,7 +59,7 @@ public class ConversationsActivity extends AppCompatActivity {
 
         conversationAdapter = new ConversationAdapter(this, listConversations);
 
-        ListView listView = (ListView) findViewById(R.id.listView_conversations);
+
         listView.setAdapter(conversationAdapter);
 
     }

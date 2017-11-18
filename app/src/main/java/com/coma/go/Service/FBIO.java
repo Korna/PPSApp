@@ -28,7 +28,6 @@ import static com.coma.go.Misc.Constants.*;
 
 public class FBIO {
 
-
     /**  создание аккаунта   */
     public static User createUserInfo(String uid, User user){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_USERS);
@@ -310,7 +309,6 @@ public class FBIO {
 
 
         Task deleteTaskGlobal = ref.child(FB_DIRECTORY_EVENTS).child(category).child(key).removeValue();
-
 
 
         ref.child(FB_DIRECTORY_USERS).addListenerForSingleValueEvent(//глобальный и постоянный прослушиватель всех данных marks

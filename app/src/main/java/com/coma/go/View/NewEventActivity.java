@@ -16,19 +16,24 @@ import com.coma.go.Service.Singleton;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class NewEventActivity extends AppCompatActivity {
 
     Singleton singleton = Singleton.getInstance();
-
+    @Bind(R.id.editText_name)
     EditText editTextName;
+    @Bind(R.id.editText_description)
     EditText editTextDescription;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
-
-        editTextName = (EditText) findViewById(R.id.editText_name);
-        editTextDescription = (EditText) findViewById(R.id.editText_description);
+        ButterKnife.bind(this);
+       // editTextName = (EditText) findViewById(R.id.editText_name);
+       // editTextDescription = (EditText) findViewById(R.id.editText_description);
 
 
         Button buttonAdd = (Button) findViewById(R.id.button_add_event);
@@ -82,9 +87,6 @@ public class NewEventActivity extends AppCompatActivity {
 
                 Toast.makeText(NewEventActivity.this, "Добавлено!", Toast.LENGTH_SHORT).show();
                 finish();
-
-
-
             }
         });
         builder.show();

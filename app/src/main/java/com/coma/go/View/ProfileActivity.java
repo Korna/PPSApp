@@ -12,22 +12,28 @@ import com.coma.go.Model.Event;
 import com.coma.go.Model.UserInfo;
 import com.coma.go.R;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class ProfileActivity extends AppCompatActivity {
+    @Bind(R.id.textView_name)
     TextView textViewName;
+    @Bind(R.id.textView_description)
     TextView textViewDescription;
+    @Bind(R.id.textView_city)
     TextView textViewCity;
+    @Bind(R.id.button_write)
     Button buttonWrite;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        ButterKnife.bind(this);
         final UserInfo userInfo = (UserInfo)getIntent().getSerializableExtra("clickedEvent");
 
-        textViewCity = (TextView) findViewById(R.id.textView_city);
-        textViewDescription = (TextView) findViewById(R.id.textView_description);
-        textViewName = (TextView) findViewById(R.id.textView_name);
-        buttonWrite = (Button) findViewById(R.id.button_write);
+
+
 
         textViewName.setText(userInfo.getNickname());
         textViewDescription.setText(userInfo.getDescription());

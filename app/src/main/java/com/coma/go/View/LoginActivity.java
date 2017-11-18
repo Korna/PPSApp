@@ -51,6 +51,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 import static android.Manifest.permission.READ_CONTACTS;
 import static com.coma.go.Misc.Constants.FB_DIRECTORY_USERS;
 
@@ -63,10 +66,14 @@ public class LoginActivity extends AppCompatActivity  {
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    @Bind(R.id.email)
+    AutoCompleteTextView mEmailView;
+    @Bind(R.id.password)
+    EditText mPasswordView;
+    View mProgressView;
+    View mLoginFormView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +81,9 @@ public class LoginActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
 
+        ButterKnife.bind(this);
 
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
-
-        mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {

@@ -9,12 +9,12 @@ import java.util.ArrayList;
 
 public class Event extends WebInfo implements Serializable {
 
-    String author_id;
-    String photo_id;
-    String name;
-    String description;
-    String time;
-    String category;
+    private String author_id;
+    private String photo_id;
+    private String name;
+    private String description;
+    private String time;
+    private String category;
     private ArrayList<String> participants = new ArrayList<>();
     //ArrayList<String> moderatorsList;
 
