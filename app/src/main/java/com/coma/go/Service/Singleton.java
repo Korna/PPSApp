@@ -16,8 +16,12 @@ public class Singleton {
     private Singleton() {
     }
 
-    public User user;
+    private User user;
     public void setUser(User user){
         this.user =  user;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

@@ -23,6 +23,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 import static com.coma.go.Misc.Constants.FB_DIRECTORY_CONVERSATIONS;
 import static com.coma.go.Misc.Constants.FB_DIRECTORY_USERS;
 
@@ -33,25 +36,32 @@ public class ConversationsActivity extends AppCompatActivity {
 
     ConversationAdapter conversationAdapter;
 
+    @Bind(R.id.listView_conversations)
+    ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversations);
         final Singleton singleton = Singleton.getInstance();
+        final String uid = singleton.getUser().userInfo.getUid();
 
-        Task task = FBIO.getMyCids(singleton.user.userInfo.getUid()).getTask();
+        ButterKnife.bind(this);
+
+
+        Task task = FBIO.getMyCids(uid).getTask();
         task.addOnCompleteListener(new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
                 cidList = (ArrayList<String>) task.getResult();
-                getMyConversations(singleton.user.userInfo.getUid());
+                getMyConversations(uid);
 
             }
         });
 
         conversationAdapter = new ConversationAdapter(this, listConversations);
 
-        ListView listView = (ListView) findViewById(R.id.listView_conversations);
+
         listView.setAdapter(conversationAdapter);
 
     }
@@ -61,9 +71,9 @@ public class ConversationsActivity extends AppCompatActivity {
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_CONVERSATIONS);
 
-        for(String string : cidList){
-
-            ref.child(string).addListenerForSingleValueEvent(//глобальный и постоянный прослушиватель всех данных marks
+        for(String cid : cidList){
+            Log.w("heh", "Loaded conversation");
+            ref.child(cid).addListenerForSingleValueEvent(//глобальный и постоянный прослушиватель всех данных marks
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {

@@ -19,6 +19,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 
 import static com.coma.go.Misc.Constants.*;
 
@@ -27,7 +30,6 @@ import static com.coma.go.Misc.Constants.*;
  */
 
 public class FBIO {
-
 
     /**  создание аккаунта   */
     public static User createUserInfo(String uid, User user){
@@ -55,6 +57,9 @@ public class FBIO {
         String key = ref.push().getKey();
 
         conversation.setCid(key);
+        Date currentTime = Calendar.getInstance().getTime();
+
+        conversation.setName(currentTime.toString());
         //conversation.setId(key);
         conversation.setParticipants(participants);
         ref.child(key).setValue(conversation);
@@ -117,39 +122,6 @@ public class FBIO {
 
                             String cid = snapshot.getValue(String.class);
                             listOfCids.add(cid);
-
-                            /*
-                            *
-
-                            Task task = getConversationByCid(cid).getTask();//TODO здесь мы получаем лишь uid
-
-
-
-                            task.addOnCompleteListener(new OnCompleteListener() {
-                                @Override
-                                public void onComplete(@NonNull Task task) {
-                                    conversation = (Conversation) task.getResult();
-
-                                    for(String participants : conversation.getParticipants()){
-                                        if(getterUid.equals(participants) && conversation.getParticipants().size() == 1){
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-
-                                    if(!found){
-                                        ArrayList<String> list = new ArrayList<>();
-                                        list.add(senderUid);
-                                        list.add(getterUid);
-                                        conversation = FBIO.createConversation(list);
-                                    }
-
-                                    taskCompletionSource.setResult(conversation);
-
-                                }
-
-                            });
-                            * */
                         }
 
                         final Task taskConversationList = getConversationsByCids(listOfCids).getTask();
@@ -264,7 +236,7 @@ public class FBIO {
                         for(DataSnapshot snapshot: dataSnapshot.getChildren()){
                             String string = snapshot.getValue(String.class);
                             eventList.add(string);
-                            Log.v("received&added", string.toString());
+                            Log.v("received cids", string);
                         }
                         arrayListTaskCompletionSource.setResult(eventList);
                     }
@@ -306,14 +278,10 @@ public class FBIO {
     public static void deleteEvent(String uid, String category, final String key){
         DatabaseReference ref;
         ref = FirebaseDatabase.getInstance().getReference();
-
-
         TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
 
 
         Task deleteTaskGlobal = ref.child(FB_DIRECTORY_EVENTS).child(category).child(key).removeValue();
-
-
 
 
         ref.child(FB_DIRECTORY_USERS).addListenerForSingleValueEvent(//глобальный и постоянный прослушиватель всех данных marks
@@ -327,11 +295,25 @@ public class FBIO {
                             User object = snapshot.getValue(User.class);
                             String uid = object.userInfo.getUid();
 
-                            for(Event event : object.participation)
-                                if(event.getId().equals(key)){
-                                    object.participation.remove(event);
-                                    FBIO.createUserInfo(uid, object);
-                                }
+                            Iterator<Event> i = object.participation.iterator();
+                            while (i.hasNext()) {
+                                Event event = i.next(); // должен быть вызван перед тем, как вызывается i.remove()
+
+                                if (event.getId() != null)
+                                    if (event.getId().equals(key)) {
+                                        i.remove(); // Элемент value был удалён из коллекции strings
+                                        FBIO.createUserInfo(uid, object);
+                                    }
+
+                            }
+                                /*
+                                for (Event event : object.participation)
+                                    if (event.getId() != null)
+                                        if (event.getId().equals(key)) {
+                                            object.participation.remove(event);
+                                            FBIO.createUserInfo(uid, object);
+                                        }*/
+
 
                         }
 

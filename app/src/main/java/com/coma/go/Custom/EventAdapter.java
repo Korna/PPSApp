@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.coma.go.Model.User;
 import com.coma.go.Service.FBIO;
 import com.coma.go.Service.Singleton;
 import com.coma.go.View.EventActivity;
@@ -36,7 +37,8 @@ import static com.coma.go.Misc.Constants.FB_DIRECTORY_USERS;
 
 public class EventAdapter extends ArrayAdapter<Event> {
 
-    Singleton singleton = Singleton.getInstance();
+
+    private User user = null;
     private Activity activity;
     public List<Event> eventList;
     private String category;
@@ -46,66 +48,74 @@ public class EventAdapter extends ArrayAdapter<Event> {
         this.eventList = eventList;
         this.activity = context;
         this.category = category;
+
+        Singleton singleton = Singleton.getInstance();
+        user = singleton.getUser();
+
         if(category.equals("My")){
-            String uid = singleton.user.userInfo.getUid();
+            String uid = user.userInfo.getUid();
             getMyEvents(uid);
-        }
-        else{
+        } else{
             getEvents();
         }
-
     }
 
     @NonNull
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {// TODO здесь может быть баг, если удалили мероприятие во время просмотра
         LayoutInflater inflater = activity.getLayoutInflater();
 
         View row = inflater.inflate(R.layout.row_event, null, true);
 
         ImageView imageViewPhoto = (ImageView) row.findViewById(R.id.imageView);
-       //Drawable d = getPhotoById(eventList.get(position).getPhoto_id());
-        //imageViewPhoto.setImageDrawable(drawable);
-
-
-        if(singleton.user != null)
-            if(eventList.get(position)!= null)
-                if(eventList.get(position).getAuthor_id().equals(singleton.user.userInfo.getUid())){
-                        ImageView imageViewDelete = (ImageView) row.findViewById(R.id.imageView_delete);
-                        imageViewDelete.setVisibility(View.VISIBLE);
-                        imageViewDelete.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                singleton.user.participation.remove(eventList.get(position));
-                                FBIO.deleteEvent(null, eventList.get(position).getCategory(), eventList.get(position).getId());
-                                eventList.remove(position);
-                                refreshAdapter();
-                            }
-                        });
-                    }
-
-
-
         TextView textViewName = (TextView) row.findViewById(R.id.textView_conversation_name);
         TextView textViewDesc = (TextView) row.findViewById(R.id.textView_description);
         Button buttonGetQuest = (Button) row.findViewById(R.id.button_info);
+        ImageView imageViewDelete = (ImageView) row.findViewById(R.id.imageView_delete);
 
-        textViewName.setText(eventList.get(position).getName());
-        textViewDesc.setText(eventList.get(position).getDescription());
+        final Event event = eventList.get(position);
+
+        try {
+            if (user != null)
+                if (event.getAuthor_id().equals(user.userInfo.getUid())) {
+                    imageViewDelete.setVisibility(View.VISIBLE);
+                    imageViewDelete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            user.participation.remove(event);
+                            FBIO.deleteEvent(null, event.getCategory(), eventList.get(position).getId());
+                            eventList.remove(position);
+                            refreshAdapter();
+                        }
+                    });
+                }
+
+            textViewName.setText(event.getName());
+            textViewDesc.setText(event.getDescription());
+
+        } catch(NullPointerException npe){
+                Log.e("getView", npe.toString());
+
+            textViewName.setText(null);
+            textViewDesc.setText(null);
+            }
+
 
         buttonGetQuest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event event = eventList.get(position);
-
-                Intent intent = new Intent(getContext(), EventActivity.class);
-                intent.putExtra("clickedEvent", event);
-                activity.startActivity(intent);
-
-
+                if(event != null) {
+                    Intent intent = new Intent(getContext(), EventActivity.class);
+                    intent.putExtra("clickedEvent", event);
+                    activity.startActivity(intent);
+                }
             }
         });
+
+
+
+
 
 
 

@@ -49,7 +49,7 @@
         android:id="@+id/button_write"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Написать"
         android:layout_above="@+id/textView3"
-        android:layout_toEndOf="@+id/textView3"
-        android:text="Написать" />
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

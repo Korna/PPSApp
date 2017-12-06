@@ -18,7 +18,6 @@ import java.util.List;
  */
 
 public class MessageAdapter extends ArrayAdapter<Message> {
-
     private Activity activity;
     public List<Message> questList;
 
@@ -27,7 +26,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         super(context, R.layout.row_message, questList);
         this.activity = context;
         this.questList = questList;
-
     }
 
     @NonNull
@@ -37,23 +35,13 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
         View row = inflater.inflate(R.layout.row_message, null, true);
 
-
         TextView textViewName = (TextView) row.findViewById(R.id.textView_sender);
         TextView textViewDesc = (TextView) row.findViewById(R.id.textView_message);
         TextView textViewTime = (TextView) row.findViewById(R.id.textView_time);
 
-
         textViewName.setText(questList.get(position).getSender());
         textViewDesc.setText(questList.get(position).getMessage());
         textViewTime.setText(questList.get(position).getTime());
-
-
-
-
         return row;
     }
-
-
-
-
 }

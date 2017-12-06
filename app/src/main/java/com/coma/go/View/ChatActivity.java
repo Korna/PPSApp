@@ -23,12 +23,22 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 import static com.coma.go.Misc.Constants.FB_DIRECTORY_CONVERSATIONS;
 
 public class ChatActivity extends AppCompatActivity {
 
     Conversation conversation;
     String cid;
+    @Bind(R.id.listView_message_history)
+    ListView listView;
+    @Bind(R.id.editText_message)
+    EditText editTextMessage;
+    @Bind(R.id.button_send)
+    Button buttonSend;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +47,7 @@ public class ChatActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        final EditText editTextMessage = (EditText) findViewById(R.id.editText_message);
-        ListView listView = (ListView) findViewById(R.id.listView_message_history);
+        ButterKnife.bind(this);
 
 
         try {
@@ -54,13 +63,6 @@ public class ChatActivity extends AppCompatActivity {
         listView.setAdapter(chatAdapter);
 
 
-
-
-
-
-
-
-        Button buttonSend = (Button) findViewById(R.id.button_send);
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,13 +74,12 @@ public class ChatActivity extends AppCompatActivity {
                 message.setReaded(false);
 
                 Singleton singleton = Singleton.getInstance();
-                String uid = singleton.user.getId();
+
+                String uid = singleton.getUser().getId();
                 message.setSender(uid);
 
                 String s  = "date.2017";
                 message.setTime(s);
-
-
 
                 conversation.getMessageHistory().add(message);//может быть по времени рассинхрон.
 

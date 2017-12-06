@@ -55,10 +55,6 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
                 intent.putExtra("Conversation", conversationList.get(position));
                 getContext().startActivity(intent);
 
-
-
-
-
             }
         });
 

@@ -16,15 +16,24 @@ import com.coma.go.Service.Singleton;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class NewEventActivity extends AppCompatActivity {
+
+    Singleton singleton = Singleton.getInstance();
+    @Bind(R.id.editText_name)
+    EditText editTextName;
+    @Bind(R.id.editText_description)
+    EditText editTextDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
-
-        final EditText editTextName = (EditText) findViewById(R.id.editText_name);
-        final EditText editTextDescription = (EditText) findViewById(R.id.editText_description);
+        ButterKnife.bind(this);
+       // editTextName = (EditText) findViewById(R.id.editText_name);
+       // editTextDescription = (EditText) findViewById(R.id.editText_description);
 
 
         Button buttonAdd = (Button) findViewById(R.id.button_add_event);
@@ -38,37 +47,31 @@ public class NewEventActivity extends AppCompatActivity {
                 editTextName.setText("");
 
 
-                Singleton singleton = Singleton.getInstance();
-                String id = singleton.user.userInfo.getUid();
+
+                String id = singleton.getUser().userInfo.getUid();
 
                 Event event = new Event();
                 event.setAuthor_id(id);
                 event.setName(name);
                 event.setDescription(description);
-
-                //ArrayList<String> list = new ArrayList<>();
-
-                event.participants.add(id);
-                event.participants.add(id);
+                event.getParticipants().add(id);
 
 
                 selectCategory(event);
-
-
             }
         });
     }
 
 
     private void selectCategory(final Event event){
-        final CharSequence colors[] = new CharSequence[] {"Public", "Job", "Friends"};
+        final CharSequence categories[] = new CharSequence[] {"Public", "Job", "Friends"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Pick a color");
-        builder.setItems(colors, new DialogInterface.OnClickListener() {
+        builder.setTitle("Pick a category");
+        builder.setItems(categories, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String selected = colors[which].toString();
+                String selected = categories[which].toString();
 
 
 
@@ -78,17 +81,12 @@ public class NewEventActivity extends AppCompatActivity {
                 String eventKey = FBIO.createEvent(event, selected);
 
 
+                singleton.getUser().participation.add(event);
 
-                Singleton singleton = Singleton.getInstance();
-                singleton.user.participation.add(event);
-
-                FBIO.createUserInfo(singleton.user.userInfo.getUid(), singleton.user);
+                FBIO.createUserInfo(singleton.getUser().userInfo.getUid(), singleton.getUser());
 
                 Toast.makeText(NewEventActivity.this, "Добавлено!", Toast.LENGTH_SHORT).show();
                 finish();
-
-
-
             }
         });
         builder.show();
