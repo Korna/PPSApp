@@ -32,9 +32,6 @@ public class ProfileActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         final UserInfo userInfo = (UserInfo)getIntent().getSerializableExtra("clickedEvent");
 
-
-
-
         textViewName.setText(userInfo.getNickname());
         textViewDescription.setText(userInfo.getDescription());
         try {

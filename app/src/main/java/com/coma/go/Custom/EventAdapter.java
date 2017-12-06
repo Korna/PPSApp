@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.coma.go.Model.User;
 import com.coma.go.Service.FBIO;
 import com.coma.go.Service.Singleton;
 import com.coma.go.View.EventActivity;
@@ -36,7 +37,8 @@ import static com.coma.go.Misc.Constants.FB_DIRECTORY_USERS;
 
 public class EventAdapter extends ArrayAdapter<Event> {
 
-    Singleton singleton = Singleton.getInstance();
+
+    private User user = null;
     private Activity activity;
     public List<Event> eventList;
     private String category;
@@ -47,8 +49,11 @@ public class EventAdapter extends ArrayAdapter<Event> {
         this.activity = context;
         this.category = category;
 
+        Singleton singleton = Singleton.getInstance();
+        user = singleton.getUser();
+
         if(category.equals("My")){
-            String uid = singleton.user.userInfo.getUid();
+            String uid = user.userInfo.getUid();
             getMyEvents(uid);
         } else{
             getEvents();
@@ -66,19 +71,19 @@ public class EventAdapter extends ArrayAdapter<Event> {
         TextView textViewName = (TextView) row.findViewById(R.id.textView_conversation_name);
         TextView textViewDesc = (TextView) row.findViewById(R.id.textView_description);
         Button buttonGetQuest = (Button) row.findViewById(R.id.button_info);
+        ImageView imageViewDelete = (ImageView) row.findViewById(R.id.imageView_delete);
 
         final Event event = eventList.get(position);
 
         try {
-            if (singleton.user != null)
-                if (event.getAuthor_id().equals(singleton.user.userInfo.getUid())) {
-                    ImageView imageViewDelete = (ImageView) row.findViewById(R.id.imageView_delete);
+            if (user != null)
+                if (event.getAuthor_id().equals(user.userInfo.getUid())) {
                     imageViewDelete.setVisibility(View.VISIBLE);
                     imageViewDelete.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
-                            singleton.user.participation.remove(event);
+                            user.participation.remove(event);
                             FBIO.deleteEvent(null, event.getCategory(), eventList.get(position).getId());
                             eventList.remove(position);
                             refreshAdapter();

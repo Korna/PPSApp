@@ -48,7 +48,7 @@ public class NewEventActivity extends AppCompatActivity {
 
 
 
-                String id = singleton.user.userInfo.getUid();
+                String id = singleton.getUser().userInfo.getUid();
 
                 Event event = new Event();
                 event.setAuthor_id(id);
@@ -81,9 +81,9 @@ public class NewEventActivity extends AppCompatActivity {
                 String eventKey = FBIO.createEvent(event, selected);
 
 
-                singleton.user.participation.add(event);
+                singleton.getUser().participation.add(event);
 
-                FBIO.createUserInfo(singleton.user.userInfo.getUid(), singleton.user);
+                FBIO.createUserInfo(singleton.getUser().userInfo.getUid(), singleton.getUser());
 
                 Toast.makeText(NewEventActivity.this, "Добавлено!", Toast.LENGTH_SHORT).show();
                 finish();

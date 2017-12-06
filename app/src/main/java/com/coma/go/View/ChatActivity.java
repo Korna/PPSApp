@@ -50,7 +50,6 @@ public class ChatActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
-
         try {
             conversation = (Conversation) getIntent().getSerializableExtra("Conversation");
             cid  = conversation.getCid();
@@ -64,9 +63,6 @@ public class ChatActivity extends AppCompatActivity {
         listView.setAdapter(chatAdapter);
 
 
-
-
-
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +74,8 @@ public class ChatActivity extends AppCompatActivity {
                 message.setReaded(false);
 
                 Singleton singleton = Singleton.getInstance();
-                String uid = singleton.user.getId();
+
+                String uid = singleton.getUser().getId();
                 message.setSender(uid);
 
                 String s  = "date.2017";

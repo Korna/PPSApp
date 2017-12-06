@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -123,16 +121,11 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_profile:
                 Intent intentMyProfile = new Intent(getApplicationContext(), ProfileActivity.class);
-
                 Singleton singleton = Singleton.getInstance();
-                intentMyProfile.putExtra("clickedEvent", singleton.user.userInfo);
-
+                intentMyProfile.putExtra("clickedEvent", singleton.getUser().userInfo);
                 startActivity(intentMyProfile);
                 break;
-
-
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

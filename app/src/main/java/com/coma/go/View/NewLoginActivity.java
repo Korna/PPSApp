@@ -39,6 +39,9 @@ import static com.coma.go.Misc.Constants.FB_DIRECTORY_USERS;
 public class NewLoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private FirebaseUser firebaseUser = null;
+
     @Bind(R.id.button_register_user)
     Button buttonRegister;
     @Bind(R.id.button_signup)
@@ -48,13 +51,11 @@ public class NewLoginActivity extends AppCompatActivity {
     @Bind(R.id.editText_pass)
     EditText textPass;
 
-    Singleton instance = Singleton.getInstance();
-
-    FirebaseUser firebaseUser = null;
     @Bind(R.id.layout_signup)
     RelativeLayout layout_signup;
     @Bind(R.id.layout_loading)
     RelativeLayout layout_loading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +66,6 @@ public class NewLoginActivity extends AppCompatActivity {
         layout_loading.setVisibility(View.VISIBLE);
 
         setListener();
-
-
         buttonRegister.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -74,7 +73,6 @@ public class NewLoginActivity extends AppCompatActivity {
               clickRegister();
             }
         });
-
         buttonSignUp.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -85,30 +83,32 @@ public class NewLoginActivity extends AppCompatActivity {
     }
 
     private void clickSignUp(){
-        String email = textEmail.getText().toString();
-        String pass = textPass.getText().toString();
-        textEmail.setText("");
-        textPass.setText("");
+        //показываем слой экрана с уведомлением о загрузке
         layout_signup.setVisibility(View.INVISIBLE);
         layout_loading.setVisibility(View.VISIBLE);
-
+        //получаем почту и пароль
+        String email = textEmail.getText().toString();
+        String pass = textPass.getText().toString();
+        //вызываем функцию отправки запроса о верности данных
         signUp(email, pass);
+        //очищаем поля
+        textEmail.setText("");
+        textPass.setText("");
     }
+
     private void clickRegister(){
         String email = textEmail.getText().toString();
         String pass = textPass.getText().toString();
-
         Task task = createAccount(email, pass).getTask();
         task.addOnCompleteListener(new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
                 AuthResult authResult = (AuthResult) task.getResult();
                 String uid = authResult.getUser().getUid();
-                User user = new User(new UserInfo(uid, "nickname", "photo", "im fag", "spb"));
+                User user = new User(new UserInfo(uid, "nickname", "photo", "im user", "spb"));
                 FBIO.createUserInfo(uid, user);
             }
         });
-
     }
 
     private void setListener(){
@@ -140,7 +140,6 @@ public class NewLoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
                             AuthResult authResult = task.getResult();
                             taskCompletionSource.setResult(authResult);
 
@@ -150,7 +149,6 @@ public class NewLoginActivity extends AppCompatActivity {
                         }else{
                             Toast.makeText(NewLoginActivity.this, "Регистрация провалена", Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
         return taskCompletionSource;
@@ -159,34 +157,29 @@ public class NewLoginActivity extends AppCompatActivity {
 
 
     private void signUp(String email, String password){
+        //вызываем метод авторизации у класса облачной аутентификации
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful()) {//если успешно найден пользователь с таким паролем
+                            //получаем аутентификацию
                             AuthResult authResult = task.getResult();
+                            //получаем уникальный идентификатор пользователя
                             String uid = authResult.getUser().getUid();
-
+                            //вызываем функцию для перехода в новый экран
                             proceedToMainActivity(uid);
-
-
-
                         }else{
                             Toast.makeText(NewLoginActivity.this, "Wrong login or password", Toast.LENGTH_SHORT).show();
                         }
 
                     }
                 });
-
-
     }
 
 
     private TaskCompletionSource getUserTask(String uid){
         final TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
-
-
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(FB_DIRECTORY_USERS);
 
         ref.child(uid).addListenerForSingleValueEvent(//глобальный и постоянный прослушиватель всех данных marks
@@ -198,13 +191,10 @@ public class NewLoginActivity extends AppCompatActivity {
                             taskCompletionSource.setException(new FirebaseNetworkException("not found user"));
                             Log.e("not loaded", "user data");
                         }
-
                         else{
                             taskCompletionSource.setResult(user);
                             Log.d("loaded", "user data");
                         }
-
-
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}
@@ -216,27 +206,32 @@ public class NewLoginActivity extends AppCompatActivity {
 
 
     private void proceedToMainActivity(String uid){
+        //вызываем функцию для получения информации о пользователе
         Task taskUser = getUserTask(uid).getTask();
 
         taskUser.addOnCompleteListener(new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
-
-
-                if(task.isSuccessful()){
+                if(task.isSuccessful()){//в случае, если информация была успешно найдена и скачена
+                    //получаем пользователя из задачи
                     User user = (User) task.getResult();
+                    //заносим пользователя в синглтон
                     Singleton singleton = Singleton.getInstance();
                     singleton.setUser(user);
+                    //вывод идентификатора в консоль
                     Log.i("uid", user.userInfo.getUid());
 
                     Toast.makeText(NewLoginActivity.this, "Succeed", Toast.LENGTH_SHORT).show();
+                    //создаем новый экран и запускаем его
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
+                    //закрываем текущий экран
                     finish();
                 }else{
+                    Toast.makeText(NewLoginActivity.this, "Not found info on server", Toast.LENGTH_SHORT).show();
+                    //возвращаем видимость формы ввода
                     layout_signup.setVisibility(View.VISIBLE);
                     layout_loading.setVisibility(View.INVISIBLE);
-                    Toast.makeText(NewLoginActivity.this, "Not found info on server", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -256,5 +251,4 @@ public class NewLoginActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-
 }

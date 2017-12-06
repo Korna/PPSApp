@@ -59,7 +59,7 @@ public class EventActivity extends AppCompatActivity {
         buttonWrite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Task taskGetConversation = FBIO.getActualCid(singleton.user.userInfo.getUid(), event.getAuthor_id()).getTask();
+                final Task taskGetConversation = FBIO.getActualCid(singleton.getUser().userInfo.getUid(), event.getAuthor_id()).getTask();
                 taskGetConversation.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
@@ -79,13 +79,13 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    singleton.user.getParticipation().add(event);
+                    singleton.getUser().getParticipation().add(event);
                 }catch(NullPointerException npe){
                     Log.e("no part case", npe.toString());
-                    singleton.user.participation = new ArrayList<Event>();
-                    singleton.user.getParticipation().add(event);
+                    singleton.getUser().participation = new ArrayList<Event>();
+                    singleton.getUser().getParticipation().add(event);
                 }
-                FBIO.createUserInfo(singleton.user.userInfo.getUid(), singleton.user);
+                FBIO.createUserInfo(singleton.getUser().userInfo.getUid(), singleton.getUser());
                 Toast.makeText(EventActivity.this, "Вы учавствуете в этом мероприятии", Toast.LENGTH_SHORT).show();//TODO вы уже учавствуете в этом мероприятии!
             }
         });
