@@ -20,6 +20,7 @@ import android.view.MenuItem;
 
 import com.coma.go.Custom.Adapters.EventAdapter;
 import com.coma.go.Entity.Event;
+import com.coma.go.Entity.Options;
 import com.coma.go.Misc.App;
 import com.coma.go.Misc.SignViewModel;
 import com.coma.go.R;
@@ -28,6 +29,7 @@ import com.coma.go.View.User.MyEventActivity;
 import com.coma.go.View.User.MyProfileActivity;
 import com.coma.go.View.User.NewEventActivity;
 import com.coma.go.View.User.NewLoginActivity;
+import com.coma.go.View.User.OptionsActivity;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
@@ -169,8 +171,8 @@ public class MainActivity extends AppCompatActivity
         Intent intent = null;
         switch(id){
             case R.id.nav_dialogs:
-                intent = new Intent(MainActivity.this, ConversationsActivity.class);
-                startActivity(intent);
+                intent = new Intent(MainActivity.this, DialogsActivity.class);
+
                 break;
             case R.id.nav_quit:
                 SignViewModel.saveSession("", this);
@@ -185,6 +187,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_profile:
                 intent = new Intent(MainActivity.this, MyProfileActivity.class);
+                break;
+            case R.id.nav_options:
+                intent = new Intent(MainActivity.this, OptionsActivity.class);
                 break;
         }
         if(intent != null)

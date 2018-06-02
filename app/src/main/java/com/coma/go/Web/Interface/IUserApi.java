@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData;
 
 import com.coma.go.Entity.Dialog;
 import com.coma.go.Entity.Event;
+import com.coma.go.Entity.Message;
+import com.coma.go.Entity.Options;
 import com.coma.go.Entity.Profile;
 import com.coma.go.Model.ApiResponse;
 
@@ -33,12 +35,13 @@ public interface IUserApi {//если в запросе NUll, то вся query 
 
     @FormUrlEncoded
     @POST("/api/signin")
-    Observable<Response<Void>> login( @Field("email") String email, @Field("password") String password);
+    Observable<Response<Void>> login( @Field("email") String email, @Field("password") String password,
+                                      @Field("fcmToken") String fcmToken);
 
 
     @FormUrlEncoded
-    @POST("/api/refreshFcmToken")
-    Observable<Response<Void>> refreshFcmToken(  @Field("token") String token);
+    @POST("/api/profile/updateFcm")
+    Observable<Response<Void>> refreshFcmToken(@Field("fcmToken") String fcmToken);
 
 
     @GET("/api/profile/")
@@ -55,7 +58,8 @@ public interface IUserApi {//если в запросе NUll, то вся query 
                                           @Field("description")String description,
                                           @Field("category")String category,
                                           @Field("image") String image,
-                                          @Field("latitude") Double lat, @Field("longitude") Double lon);
+                                          @Field("latitude") Double lat,
+                                          @Field("longitude") Double lon);
 
     @GET("/api/notes/all")
     Observable<Response<List<Event>>> getNotes();
@@ -68,10 +72,26 @@ public interface IUserApi {//если в запросе NUll, то вся query 
     @POST("/api/notes/join")
     Observable<Response<Void>> joinEvent(@Field("eventId") String eventId);
 
-    @GET("/api/dialogs")
+    @GET("/api/dialogs/my")
     Observable<Response<List<Dialog>>> getDialogs();
+
+    @POST("/api/chat/message")
+    Observable<Response<Message>> sendMessage(@Body Message message);
+
+    @FormUrlEncoded
+    @POST("/api/chat/message/get")
+    Observable<Response<List<Message>>> getMessages(@Field("dialogId") String idDialog);
 
     @FormUrlEncoded
     @POST("/api/dialogs/create")
     Observable<Response<String>> createDialog(@Field("companionId") String companionId);
+
+
+    @POST("/api/options/")
+    Observable<Response<Void>> sendOptions(@Body Options options);
+
+
+    @GET("/api/options/")
+    Observable<Response<Options>> getOptions();
+
 }

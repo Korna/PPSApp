@@ -1,6 +1,7 @@
 package com.coma.go.View;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import retrofit2.Response;
 
 import static com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade;
+import static com.coma.go.View.ChatActivity.DIALOG_ID;
 
 public class UserProfileActivity extends AppCompatActivity {
     public static String PROFILE = "Profile";
@@ -43,13 +45,14 @@ public class UserProfileActivity extends AppCompatActivity {
     @BindView(R.id.imageView_avatar)
     ImageView imageView_avatar;
 
+    Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
-        final Profile profile = (Profile)getIntent().getSerializableExtra(PROFILE);
+        profile = (Profile)getIntent().getSerializableExtra(PROFILE);
 
         loadInfoToUi(profile);
 
@@ -87,8 +90,12 @@ public class UserProfileActivity extends AppCompatActivity {
                         this::error);
     }
     private void subscribe(Response<String> profileResponse) {
-        if(profileResponse.isSuccessful())
-            ViewUtils.showToast(this, "Created");
+        if(profileResponse.isSuccessful()){
+            Intent intent = new Intent(this, ChatActivity.class);
+            intent.putExtra(DIALOG_ID, profileResponse.body());
+            intent.putExtra(PROFILE, profile);
+            startActivity(intent);
+        }
         else
             ViewUtils.showToast(this, "Cant create dialog");
     }

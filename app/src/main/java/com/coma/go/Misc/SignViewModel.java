@@ -1,5 +1,6 @@
 package com.coma.go.Misc;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,6 +9,8 @@ import android.util.Log;
 import com.coma.go.Dagger.Misc.SessionModule;
 import com.coma.go.Utils.Logger;
 import com.coma.go.Utils.ParseResponse;
+import com.coma.go.Utils.ViewUtils;
+import com.coma.go.View.User.OptionsActivity;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,6 +18,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import retrofit2.Response;
@@ -33,6 +37,19 @@ public class SignViewModel  {
         String token = FirebaseInstanceId.getInstance().getToken();
         Log.d("FCM", "Token is:" + token);
         return token;
+    }
+
+
+    @SuppressLint("CheckResult")
+    public static void refreshFCM(){
+        App.getApp().getComponent().userApi()
+                .refreshFcmToken(getFCMToken())
+                .subscribeOn(App.getApp().getNetworkScheduler())
+                .observeOn(App.getApp().getNetworkScheduler())
+                .subscribe(voidResponse -> {
+
+                        },
+                        throwable -> Logger.e("refreshFCMSignView", throwable.getMessage()));
     }
 
     public void sign(Observable<Response<Void>> observable, Context context){

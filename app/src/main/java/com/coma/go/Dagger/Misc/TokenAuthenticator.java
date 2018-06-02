@@ -8,6 +8,7 @@ import com.coma.go.Misc.SignViewModel;
 import com.coma.go.Utils.Logger;
 import com.coma.go.Utils.ParseResponse;
 import com.coma.go.Web.Interface.IUserApi;
+import com.coma.go.Web.MyFirebaseInstanceIdService;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -90,7 +91,7 @@ public class TokenAuthenticator implements Authenticator {
         String session = null;
         String fcmToken = SignViewModel.getFCMToken();
         retrofit2.Response<Void> responseFromLogin = iAccountApi
-                .login(email, password)
+                .login(email, password, fcmToken)
                 .blockingFirst();
 
         try {

@@ -6,10 +6,14 @@ import java.io.Serializable;
  * Created by Koma on 26.09.2017.
  */
 
-public class Message extends WebInfo implements Serializable{
+public class Message implements Serializable{
+    String _id;
+    String dialogId;
+    String senderId;
+
 
     String text;
-    String time;
+    String timeSent;
 
     public String getText() {
         return text;
@@ -19,11 +23,27 @@ public class Message extends WebInfo implements Serializable{
         this.text = text;
     }
 
-    public String getTime() {
-        return time;
+    public String getDialogId() {
+        return dialogId;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setDialogId(String dialogId) {
+        this.dialogId = dialogId;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+
+    public String getTimeSent() {
+        return timeSent;
+    }
+
+    public void setTimeSent(String timeSent) {
+        this.timeSent = timeSent;
     }
 }

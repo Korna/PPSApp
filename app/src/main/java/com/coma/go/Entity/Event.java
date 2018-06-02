@@ -16,7 +16,7 @@ public class Event implements Serializable{
     String _id;
     Profile authorId;
     String name;
-    String text;
+    String description;
     String category;
     double longitude;
     double latitude;
@@ -34,11 +34,11 @@ public class Event implements Serializable{
     }
 
     public String getText() {
-        return text;
+        return description;
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.description = text;
     }
 
     public String getCategory() {

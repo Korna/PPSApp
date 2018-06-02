@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.coma.go.BuildConfig;
 import com.coma.go.Entity.Event;
 import com.coma.go.R;
+import com.coma.go.Utils.ViewUtils;
 
 import butterknife.BindColor;
 import butterknife.BindDimen;
@@ -56,6 +58,7 @@ public class EventHolder extends RecyclerView.ViewHolder {
             Glide.with(itemView)
                     .asBitmap()
                     .load(item.getImage())
+                    .apply(ViewUtils.getImageOptions())
                     .transition(withCrossFade())
                     .into(imageView_event);
         }else

@@ -21,7 +21,7 @@ import java.util.List;
 
 public class DialogsAdapter extends RecyclerAdapter<Dialog, DialogHolder> {
 
-    public DialogsAdapter(List<Dialog> ticketList, int res, OnRecyclerViewItemClickListener listener){
+    public DialogsAdapter(List<Dialog> ticketList, int res, OnRecyclerViewItemClickListener<Dialog> listener){
         super(ticketList, res, listener);
 
     }

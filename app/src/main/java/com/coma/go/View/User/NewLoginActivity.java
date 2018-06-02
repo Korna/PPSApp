@@ -19,6 +19,8 @@ import com.coma.go.R;
 import com.coma.go.Utils.Logger;
 import com.coma.go.Utils.ParseResponse;
 import com.coma.go.View.MainActivity;
+import com.coma.go.Web.MyFirebaseInstanceIdService;
+import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,7 +86,10 @@ public class NewLoginActivity extends AppCompatActivity {
     }
     @SuppressLint("CheckResult")
     private void signIn(String email, String password){
-        App.getApp().getComponent().userApi().login(email, password)
+        String fcmToken = SignViewModel.getFCMToken();
+
+        App.getApp().getComponent().userApi()
+                .login(email, password, fcmToken)
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(App.getApp().getNetworkScheduler())
                 .map(response ->  {
@@ -138,6 +143,7 @@ public class NewLoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
           //  getValueLiveData().postValue(new DataResponse<>(Status.SUCCESS, null));
 
             Log.d("accepted", " :" + session);

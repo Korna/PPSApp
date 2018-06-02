@@ -32,8 +32,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage){
            // sendNewNotification("Title:" + remoteMessage.getNotification().getTitle(),
            //         "Body:" + remoteMessage.getNotification().getBody());
-        sendNewNotification("New event!",
-                remoteMessage.getNotification().getTitle());
+        sendNewNotification(remoteMessage.getNotification().getTitle(),
+                remoteMessage.getNotification().getBody());
 
     }
 

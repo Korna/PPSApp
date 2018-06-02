@@ -64,7 +64,6 @@
             android:ems="10"
             android:hint="Пароль"
             android:inputType="textPassword"
-            android:text="123456"
             tools:layout_editor_absoluteX="83dp"
             tools:layout_editor_absoluteY="300dp" />
 
@@ -77,9 +76,16 @@
             android:ems="10"
             android:hint="Почта"
             android:inputType="textPersonName"
-            android:text="artem-koma@yandex.kz"
             tools:layout_editor_absoluteX="83dp"
             tools:layout_editor_absoluteY="232dp" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_above="@+id/editText_email"
+            android:layout_alignStart="@+id/button_signup"
+            android:text="(вместо почты можно ввести ник)" />
 
     </RelativeLayout>
 

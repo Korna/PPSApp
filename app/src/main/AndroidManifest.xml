@@ -48,13 +48,14 @@
         <activity
             android:name=".View.User.MyProfileActivity"
             android:label="Profile info" />
-        <activity android:name=".View.ConversationsActivity" />
+        <activity android:name=".View.DialogsActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".View.UserProfileActivity"></activity>
+        <activity android:name=".View.UserProfileActivity" />
+        <activity android:name=".View.User.OptionsActivity"></activity>
     </application>
 
 </manifest>

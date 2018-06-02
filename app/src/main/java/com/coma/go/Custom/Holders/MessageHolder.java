@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.coma.go.Entity.Dialog;
 import com.coma.go.Entity.Message;
 import com.coma.go.R;
+import com.coma.go.Utils.TimeUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +35,10 @@ public class MessageHolder extends RecyclerView.ViewHolder {
 
     public void bind(Message item){
         if(item != null) {
-            //textView_name.setText(item.get);
+
+            textView_name.setText(item.getSenderId());
+            textView_date.setText(TimeUtils.fromDateToDate(item.getTimeSent()));
+            textView_message.setText(item.getText());
         }
     }
 }

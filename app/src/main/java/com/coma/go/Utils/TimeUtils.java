@@ -56,6 +56,23 @@ public class TimeUtils {
         return unixTime;
     }
 
+    public static String fromDateToDate(String time) {
+        DateFormat utcFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        Date date = null;
+        try {
+            date = utcFormat.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        DateFormat pstFormat = new SimpleDateFormat("dd.MM.yyyy-HH:mm");
+        pstFormat.setTimeZone(TimeZone.getTimeZone("PST"));
+
+        return pstFormat.format(date);
+    }
+
     public static @Nullable String fromUnixToDate(Long unix){
         String vv = null;
         try {
