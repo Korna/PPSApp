@@ -1,12 +1,14 @@
 package com.coma.go.View;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.view.View;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,65 +17,127 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 
-import com.coma.go.Custom.EventAdapter;
-import com.coma.go.Model.Event;
+import com.coma.go.Custom.Adapters.EventAdapter;
+import com.coma.go.Entity.Event;
+import com.coma.go.Misc.App;
+import com.coma.go.Misc.SignViewModel;
 import com.coma.go.R;
-import com.coma.go.Service.FBIO;
-import com.coma.go.Service.Singleton;
-import com.google.firebase.auth.FirebaseAuth;
+import com.coma.go.View.User.CreatedEventActivity;
+import com.coma.go.View.User.MyEventActivity;
+import com.coma.go.View.User.MyProfileActivity;
+import com.coma.go.View.User.NewEventActivity;
+import com.coma.go.View.User.NewLoginActivity;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import retrofit2.Response;
+
+import static com.coma.go.View.EventActivity.EVENT;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    private String TAG = "MainActivity";
+
+    @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.drawer_layout) DrawerLayout drawer;
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.recyclerview_events)
+    RecyclerView recyclerView;
+    @BindView(R.id.swiperefreshlayout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        loadDrawer();
+        ButterKnife.bind(this);
+
+        swipeRefreshLayout.setOnRefreshListener(this::refreshList);
         loadGui();
-        loadList();
+        FirebaseMessaging.getInstance().subscribeToTopic("notes");
+
+
+        setupRecycler();
+        getList();
     }
+
+    private void refreshList() {
+        eventAdapter.removeAll();
+        getList();
+    }
+
     private void loadGui(){
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), NewEventActivity.class);
-                startActivity(intent);
-            }
-        });
-
-    }
-    private void loadDrawer(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
-    }
-    private void loadList(){
-        ListView listViewEvents = (ListView) findViewById(R.id.listView_events);
-        EventAdapter questAdapter = new EventAdapter(this, new ArrayList<Event>(), "Public");
-        listViewEvents.setAdapter(questAdapter);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), NewEventActivity.class);
+            startActivity(intent);
+        });
+
     }
 
+    EventAdapter eventAdapter;
+    private void setupRecycler(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        eventAdapter = new EventAdapter(new ArrayList<>(), R.layout.row_event, (view, event) -> {
+
+            Intent intent = new Intent(this, EventActivity.class);
+
+            intent.putExtra(EVENT, event);
+            startActivity(intent);
+
+        });
+        recyclerView.setAdapter(eventAdapter);
+    }
+
+
+    @SuppressLint("CheckResult")
+    private void getList(){
+        swipeRefreshLayout.setRefreshing(true);
+        App.getApp().getComponent().userApi().getNotes()
+                .subscribeOn(App.getApp().getNetworkScheduler())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::subscribe,
+                        this::error);
+
+    }
+
+    private void subscribe(Response<List<Event>> listResponse) {
+        if(listResponse.isSuccessful())
+            eventAdapter.addItems(listResponse.body());
+        else
+            Log.d(TAG, listResponse.message());
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+
+    private void error(Throwable throwable) {
+        // sendErrorToView(new Exception(throwable.getMessage()));
+        Log.d(TAG, throwable.getMessage());
+        swipeRefreshLayout.setRefreshing(false);
+    }
 
 
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -102,32 +166,29 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        Intent intent = null;
         switch(id){
             case R.id.nav_dialogs:
-                Intent intentConversations = new Intent(getApplicationContext(), ConversationsActivity.class);
-                startActivity(intentConversations);
+                intent = new Intent(MainActivity.this, ConversationsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_quit:
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                mAuth.signOut();
+                SignViewModel.saveSession("", this);
                 finish();
-                Intent intentLogin = new Intent(getApplicationContext(), NewLoginActivity.class);
-                startActivity(intentLogin);
+                intent = new Intent(MainActivity.this, NewLoginActivity.class);
+                break;
+            case R.id.nav_slideshow:
+                intent = new Intent(MainActivity.this, CreatedEventActivity.class);
                 break;
             case R.id.nav_events:
-                Intent intentMyEvents = new Intent(getApplicationContext(), EventListActivity.class);
-                startActivity(intentMyEvents);
+                intent = new Intent(MainActivity.this, MyEventActivity.class);
                 break;
             case R.id.nav_profile:
-                Intent intentMyProfile = new Intent(getApplicationContext(), ProfileActivity.class);
-                Singleton singleton = Singleton.getInstance();
-                intentMyProfile.putExtra("clickedEvent", singleton.getUser().userInfo);
-                startActivity(intentMyProfile);
+                intent = new Intent(MainActivity.this, MyProfileActivity.class);
                 break;
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if(intent != null)
+            startActivity(intent);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

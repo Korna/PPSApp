@@ -9,12 +9,12 @@
         android:id="@+id/textView_row_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/imageView_profile"
-        android:layout_below="@+id/imageView_profile"
+        android:layout_alignStart="@+id/imageView_event"
+        android:layout_below="@+id/imageView_event"
         android:text="Имя" />
 
     <ImageView
-        android:id="@+id/imageView_profile"
+        android:id="@+id/imageView_event"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
@@ -27,7 +27,7 @@
         android:id="@+id/button_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView_profile"
+        android:layout_alignBottom="@+id/imageView_event"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="13dp"
         android:text="Диалог" />

@@ -1,93 +1,109 @@
 package com.coma.go.View;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.coma.go.Model.Conversation;
-import com.coma.go.Model.Event;
+import com.coma.go.Entity.Event;
+import com.coma.go.Misc.App;
 import com.coma.go.R;
-import com.coma.go.Service.FBIO;
-import com.coma.go.Service.Singleton;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.coma.go.Utils.Logger;
+import com.coma.go.Utils.ViewUtils;
+import com.coma.go.View.Fragments.ImageDialog;
+import com.coma.go.View.Fragments.MapDialog;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import retrofit2.Response;
+
+import static com.coma.go.View.UserProfileActivity.PROFILE;
 
 public class EventActivity extends AppCompatActivity {
-    Singleton singleton = Singleton.getInstance();
 
-    @Bind(R.id.button_write)
-    Button buttonWrite;
-    @Bind(R.id.button_join)
-    Button buttonJoin;
-    @Bind(R.id.textView_conversation_name)
-    TextView textViewName;
-    @Bind(R.id.textView_event_description)
-    TextView textViewDescription;
+   @BindView(R.id.button_profile) Button buttonProfile;
+   @BindView(R.id.button_join) Button buttonJoin;
+   @BindView(R.id.textView_conversation_name) TextView textView_name;
+   @BindView(R.id.textView_event_description) TextView textView_description;
+   @BindView(R.id.textView_category) TextView textView_category;
 
 
+   @BindView(R.id.imageView_map)
+   ImageView imageView_map;
+    @BindView(R.id.imageView_image)
+    ImageView imageView_image;
+
+    public static String EVENT = "Event";
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         ButterKnife.bind(this);
-        final Event event = (Event)getIntent().getSerializableExtra("clickedEvent");
-
-        /*
-        TextView textViewName = (TextView) findViewById(R.id.textView_conversation_name);
-        TextView textViewDescription = (TextView) findViewById(R.id.textView_event_description);
-        Button buttonWrite = (Button)  findViewById(R.id.button_write);
-        Button buttonJoin = (Button) findViewById(R.id.button_join);*/
+        final Event event = (Event)getIntent().getSerializableExtra(EVENT);
 
 
+        imageView_map.setOnClickListener(view -> {
+            MapDialog dialog = new MapDialog();
+            Bundle bundle = new Bundle();
 
-        textViewName.setText(event.getName());
-        textViewDescription.setText("    " + event.getDescription());
+            bundle.putDouble("lat", event.getLatitude());
+            bundle.putDouble("lon", event.getLongitude());
+            dialog.setArguments(bundle);
 
 
-
-        buttonWrite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Task taskGetConversation = FBIO.getActualCid(singleton.getUser().userInfo.getUid(), event.getAuthor_id()).getTask();
-                taskGetConversation.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        Conversation conversation = (Conversation) taskGetConversation.getResult();
-                        Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                        intent.putExtra("Conversation", conversation);
-                        startActivity(intent);
-
-                    }
-                });
-                finish();
-
-            }
+            dialog.show(getSupportFragmentManager().beginTransaction(), "DialogFragment");
         });
 
-        buttonJoin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    singleton.getUser().getParticipation().add(event);
-                }catch(NullPointerException npe){
-                    Log.e("no part case", npe.toString());
-                    singleton.getUser().participation = new ArrayList<Event>();
-                    singleton.getUser().getParticipation().add(event);
-                }
-                FBIO.createUserInfo(singleton.getUser().userInfo.getUid(), singleton.getUser());
-                Toast.makeText(EventActivity.this, "Вы учавствуете в этом мероприятии", Toast.LENGTH_SHORT).show();//TODO вы уже учавствуете в этом мероприятии!
-            }
+        imageView_image.setOnClickListener(view -> {
+            ImageDialog dialog = new ImageDialog();
+            Bundle bundle = new Bundle();
+            bundle.putString("image", event.getImage());
+            dialog.setArguments(bundle);
+
+            dialog.show(getSupportFragmentManager().beginTransaction(), "DialogFragment");
         });
+
+        buttonJoin.setOnClickListener(view -> {
+            clickJoin(event.get_id());
+        });
+        buttonProfile.setOnClickListener(view -> {
+            Intent intent = new Intent(this, UserProfileActivity.class);
+            intent.putExtra(PROFILE, event.getAuthorId());
+            startActivity(intent);
+        });
+
+        loadInfoToUi(event);
+
     }
+
+    @SuppressLint("CheckResult")
+    private void clickJoin(String id) {
+        Log.d("click", "ID:" + id);
+        if(id != null)
+            App.getApp().getComponent().userApi()
+                    .joinEvent(id)
+                    .subscribeOn(App.getApp().getNetworkScheduler())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(voidResponse -> {
+                        if (voidResponse.isSuccessful())
+                            ViewUtils.showToast(EventActivity.this, "You are attending!");
+                    }, throwable -> Logger.e("join", throwable));
+    }
+
+
+    private void loadInfoToUi(Event event){
+        textView_name.setText(event.getName());
+        textView_description.setText(event.getText());
+        textView_category.setText(event.getCategory());
+    }
+
+
 }

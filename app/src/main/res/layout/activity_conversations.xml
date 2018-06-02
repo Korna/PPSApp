@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.coma.go.View.ConversationsActivity">
 
-    <ListView
-        android:id="@+id/listView_conversations"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_dialogs"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

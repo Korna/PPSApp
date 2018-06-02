@@ -9,9 +9,9 @@
         android:id="@+id/textView_conversation_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageView_profile"
+        android:layout_alignTop="@+id/imageView_event"
         android:layout_marginStart="11dp"
-        android:layout_toEndOf="@+id/imageView_profile"
+        android:layout_toEndOf="@+id/imageView_event"
         android:layout_weight="1"
         android:text="Название"
         android:textStyle="bold" />

@@ -1,37 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.coma.go.View.NewEventActivity">
+    tools:context="com.coma.go.View.User.NewEventActivity">
 
     <EditText
         android:id="@+id/editText_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
+        android:layout_alignStart="@+id/editText_name"
+        android:layout_below="@+id/editText_name"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:ems="10"
+
         android:hint="Описание"
         android:inputType="textCapSentences|textMultiLine"
         android:maxLength="2000"
         android:maxLines="10"
-
-        android:layout_below="@+id/editText_name"
-        android:layout_alignStart="@+id/editText_name" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_name" />
 
     <EditText
         android:id="@+id/editText_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/imageView2"
-        android:layout_below="@+id/imageView2"
-        android:layout_marginTop="22dp"
+        android:layout_alignStart="@+id/imageView_image"
+        android:layout_below="@+id/imageView_image"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
         android:layout_weight="1"
         android:ems="10"
         android:hint="Название"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_add_event"
@@ -39,17 +45,48 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:text="Добавить" />
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Добавить"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="47dp"
-        app:srcCompat="@android:drawable/ic_menu_camera"
+        android:id="@+id/imageView_image"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_menu_camera" />
 
-</RelativeLayout>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_add_event" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:entries="@array/spinnerItems"
+        app:layout_constraintEnd_toEndOf="@+id/editText_description"
+        app:layout_constraintStart_toStartOf="@+id/editText_description"
+        app:layout_constraintTop_toBottomOf="@+id/editText_description"
+
+        />
+
+</android.support.constraint.ConstraintLayout>

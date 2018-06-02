@@ -1,6 +1,6 @@
 package com.coma.go.Service;
 
-import com.coma.go.Model.User;
+import com.coma.go.Entity.Account;
 
 /**
  * Created by Koma on 26.09.2017.
@@ -16,12 +16,12 @@ public class Singleton {
     private Singleton() {
     }
 
-    private User user;
-    public void setUser(User user){
+    private Account user;
+    public void setUser(Account user){
         this.user =  user;
     }
 
-    public User getUser() {
+    public Account getUser() {
         return user;
     }
 }
