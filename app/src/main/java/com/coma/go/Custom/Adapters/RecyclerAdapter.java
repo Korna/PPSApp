@@ -18,10 +18,8 @@ public abstract class RecyclerAdapter<I, H extends RecyclerView.ViewHolder> exte
 
     protected List<I> items;
 
-
     protected OnRecyclerViewItemClickListener<I> itemClickListener;
     protected int itemLayout;
-
 
     public RecyclerAdapter(List<I> items, int itemLayout, OnRecyclerViewItemClickListener<I> itemClickListener) {
         this.items = items;
@@ -29,8 +27,6 @@ public abstract class RecyclerAdapter<I, H extends RecyclerView.ViewHolder> exte
         this.itemClickListener = itemClickListener;
 
     }
-
-
 
 
     @Override

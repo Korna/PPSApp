@@ -47,13 +47,13 @@ public class MyProfileActivity extends LoadImageActivity {
         ButterKnife.bind(this);
 
 
-        App.getApp().getComponent().userApi().getProfile()
+        App.getApp().getComponent().webApi().getProfile()
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::subscribe,
                         this::error);
 
-        buttonUpdate.setOnClickListener(view -> App.getApp().getComponent().userApi().updateProfile(getProfileFromUi())
+        buttonUpdate.setOnClickListener(view -> App.getApp().getComponent().webApi().updateProfile(getProfileFromUi())
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(voidResponse -> {

@@ -6,13 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.coma.go.Entity.Dialog;
-import com.coma.go.Entity.Event;
 import com.coma.go.Entity.Profile;
 import com.coma.go.Misc.App;
 import com.coma.go.R;
@@ -83,7 +80,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     @SuppressLint("CheckResult")
     private void toDialog(String companionId){
-        App.getApp().getComponent().userApi().createDialog(companionId)
+        App.getApp().getComponent().webApi().createDialog(companionId)
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::subscribe,

@@ -11,12 +11,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.coma.go.Custom.Adapters.DialogsAdapter;
-import com.coma.go.Custom.Adapters.EventAdapter;
 import com.coma.go.Entity.Dialog;
-import com.coma.go.Entity.Event;
-import com.coma.go.Entity.Message;
 import com.coma.go.Misc.App;
 import com.coma.go.R;
+import com.coma.go.Utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +25,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import retrofit2.Response;
 
 import static com.coma.go.View.ChatActivity.DIALOG_ID;
-import static com.coma.go.View.EventActivity.EVENT;
-import static com.coma.go.View.UserProfileActivity.PROFILE;
 
 public class DialogsActivity extends AppCompatActivity {
 
@@ -49,7 +45,7 @@ public class DialogsActivity extends AppCompatActivity {
 
 
         setupRecycler();
-        //App.getApp().getComponent().userApi().getDialogs()
+        //App.getApp().getComponent().webApi().getDialogs()
         swipeRefreshLayout.setOnRefreshListener(this::getList);
         getList();
     }
@@ -77,7 +73,7 @@ public class DialogsActivity extends AppCompatActivity {
     @SuppressLint("CheckResult")
     private void getList(){
         swipeRefreshLayout.setRefreshing(true);
-        App.getApp().getComponent().userApi()
+        App.getApp().getComponent().webApi()
                 .getDialogs()
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -87,10 +83,14 @@ public class DialogsActivity extends AppCompatActivity {
 
     private void subscribe(Response<List<Dialog>> listResponse) {
         if(listResponse.isSuccessful()) {
+            dialogsAdapter.getItemList().clear();
             dialogsAdapter.addItems(listResponse.body());
         }
-        else
+        else{
+            ViewUtils.showToast(this,listResponse.message() );
             Log.d(TAG, listResponse.message());
+        }
+
         swipeRefreshLayout.setRefreshing(false);
     }
 

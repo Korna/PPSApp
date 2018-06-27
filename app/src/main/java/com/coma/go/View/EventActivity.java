@@ -17,13 +17,9 @@ import com.coma.go.Utils.ViewUtils;
 import com.coma.go.View.Fragments.ImageDialog;
 import com.coma.go.View.Fragments.MapDialog;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import retrofit2.Response;
 
 import static com.coma.go.View.UserProfileActivity.PROFILE;
 
@@ -88,7 +84,7 @@ public class EventActivity extends AppCompatActivity {
     private void clickJoin(String id) {
         Log.d("click", "ID:" + id);
         if(id != null)
-            App.getApp().getComponent().userApi()
+            App.getApp().getComponent().webApi()
                     .joinEvent(id)
                     .subscribeOn(App.getApp().getNetworkScheduler())
                     .observeOn(AndroidSchedulers.mainThread())

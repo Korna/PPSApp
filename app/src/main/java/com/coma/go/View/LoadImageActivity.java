@@ -14,14 +14,6 @@ import java.util.UUID;
 import static com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade;
 
 public abstract class LoadImageActivity extends AppCompatActivity {
-
-
-
-
-
-
-
-
     private final int PICK_IMAGE_REQUEST = 71;
     protected Uri filePath;
     protected String image = null;

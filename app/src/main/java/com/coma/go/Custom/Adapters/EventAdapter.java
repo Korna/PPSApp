@@ -25,23 +25,19 @@ public class EventAdapter extends RecyclerAdapter<Event, EventHolder> {
 
     public EventAdapter(List<Event> ticketList, int res, OnRecyclerViewItemClickListener<Event> listener){
         super(ticketList, res, listener);
-
     }
-
 
     @Override
     public EventHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(itemLayout, parent, false);
         EventHolder h = new EventHolder(v);
         h.itemView.setOnClickListener(this);
-
         return h;
     }
 
     @Override
     public void onBindViewHolder(@NonNull EventHolder h, int position) {
         h.itemView.setTag(get(position));
-      //  h.getTextView_tag().setTag(get(position));
         h.bind(get(position));
 
     }
@@ -55,7 +51,5 @@ public class EventAdapter extends RecyclerAdapter<Event, EventHolder> {
             Logger.e("TopicPageAdapter", iae.getMessage(), iae);
         }
     }
-
-
 
 }

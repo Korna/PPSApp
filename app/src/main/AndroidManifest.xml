@@ -27,8 +27,8 @@
         </service>
 
         <activity
-            android:name=".View.User.NewLoginActivity"
-            android:label="@string/app_name">
+            android:name=".View.LoginActivity"
+            android:label="Вход">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,25 +37,33 @@
         </activity>
         <activity
             android:name=".View.MainActivity"
-            android:label="@string/title_activity_main"
+            android:label="События"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".View.EventActivity" />
-        <activity android:name=".View.ChatActivity" />
-        <activity android:name=".View.User.NewEventActivity" />
-        <activity android:name=".View.LoginActivity" />
-        <activity android:name=".View.User.MyEventActivity" />
-        <activity android:name=".View.User.CreatedEventActivity" />
+        <activity android:name=".View.EventActivity"
+            android:label="Событие"
+            />
+        <activity android:name=".View.ChatActivity"
+            android:label="Чат"/>
+        <activity android:name=".View.User.NewEventActivity"
+            android:label="Новое сбытие"/>
+        <activity android:name=".View.User.MyEventActivity"
+            android:label="Мои события"/>
+        <activity android:name=".View.User.CreatedEventActivity"
+            android:label="Созданные мной события"/>
         <activity
             android:name=".View.User.MyProfileActivity"
-            android:label="Profile info" />
-        <activity android:name=".View.DialogsActivity" />
+            android:label="Мой профиль" />
+        <activity android:name=".View.DialogsActivity"
+            android:label="Диалоги"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".View.UserProfileActivity" />
-        <activity android:name=".View.User.OptionsActivity"></activity>
+        <activity android:name=".View.UserProfileActivity"
+            android:label="Профиль"/>
+        <activity android:name=".View.User.OptionsActivity"
+            android:label="Настройки"></activity>
     </application>
 
 </manifest>

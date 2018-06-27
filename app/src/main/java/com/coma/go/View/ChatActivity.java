@@ -1,7 +1,6 @@
 package com.coma.go.View;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,13 +11,9 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.coma.go.Custom.Adapters.EventAdapter;
 import com.coma.go.Custom.Adapters.MessageAdapter;
-import com.coma.go.Entity.Dialog;
-import com.coma.go.Entity.Event;
 import com.coma.go.Entity.Message;
 import com.coma.go.Entity.Profile;
 import com.coma.go.Misc.App;
@@ -30,10 +25,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import retrofit2.Response;
 
-import static com.coma.go.View.EventActivity.EVENT;
 import static com.coma.go.View.UserProfileActivity.PROFILE;
 
 public class ChatActivity extends AppCompatActivity {
@@ -117,7 +110,7 @@ public class ChatActivity extends AppCompatActivity {
     @SuppressLint("CheckResult")
     private void sendMessage(Message message){
 
-        App.getApp().getComponent().userApi().sendMessage(message)
+        App.getApp().getComponent().webApi().sendMessage(message)
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::subscribeOnMessageSent, this::error);
@@ -152,7 +145,7 @@ public class ChatActivity extends AppCompatActivity {
     @SuppressLint("CheckResult")
     private void getList(String dialogId){
         swipeRefreshLayout.setRefreshing(true);
-        App.getApp().getComponent().userApi()
+        App.getApp().getComponent().webApi()
                 .getMessages(dialogId)
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(AndroidSchedulers.mainThread())

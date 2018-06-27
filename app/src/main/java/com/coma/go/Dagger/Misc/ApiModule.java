@@ -1,6 +1,6 @@
 package com.coma.go.Dagger.Misc;
 
-import com.coma.go.Web.Interface.IUserApi;
+import com.coma.go.Web.IUserApi;
 
 import javax.inject.Named;
 

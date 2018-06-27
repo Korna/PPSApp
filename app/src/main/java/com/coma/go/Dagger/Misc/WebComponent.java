@@ -2,7 +2,7 @@ package com.coma.go.Dagger.Misc;
 
 import android.content.Context;
 
-import com.coma.go.Web.Interface.IUserApi;
+import com.coma.go.Web.IUserApi;
 import com.google.gson.Gson;
 
 import dagger.Component;
@@ -25,7 +25,7 @@ public interface WebComponent {
 
 
     Gson gson();
-    IUserApi userApi();
+    IUserApi webApi();
     Context context();
 
 

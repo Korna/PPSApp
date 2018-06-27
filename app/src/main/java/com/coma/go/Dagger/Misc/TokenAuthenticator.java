@@ -7,16 +7,9 @@ import com.coma.go.Misc.PreferencesHandler;
 import com.coma.go.Misc.SignViewModel;
 import com.coma.go.Utils.Logger;
 import com.coma.go.Utils.ParseResponse;
-import com.coma.go.Web.Interface.IUserApi;
-import com.coma.go.Web.MyFirebaseInstanceIdService;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
+import com.coma.go.Web.IUserApi;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 import okhttp3.Authenticator;
 import okhttp3.Request;
@@ -34,7 +27,7 @@ public class TokenAuthenticator implements Authenticator {
     Context context;
 
     private int authTryCount = 0;
-    private int maxAuthTryCount = 3;
+    private int maxAuthTryCount = 1;
 
     public TokenAuthenticator(IUserApi accountApi, Context context) {
         this.iAccountApi = accountApi;
@@ -48,12 +41,13 @@ public class TokenAuthenticator implements Authenticator {
         Logger.d("Authenticating for:", response.message());
         System.out.println("Challenges: " + response.challenges());
 
-        ++authTryCount;
-
         if(authTryCount > maxAuthTryCount){
             Logger.d("cant auth", "max auth retry count reached");
             return null;
         }
+        ++authTryCount;
+
+        /*
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null)
             return null;
@@ -69,7 +63,7 @@ public class TokenAuthenticator implements Authenticator {
             Logger.w("taskAwaitToken", e.getMessage());
         }
         if(idToken == null)
-            return null;
+            return null;*/
 
         PreferencesHandler preferencesHandler = new PreferencesHandler(context);
         String email = preferencesHandler.getUsername();

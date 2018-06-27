@@ -9,7 +9,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.ListView;
 
 import com.coma.go.Custom.Adapters.EventAdapter;
 import com.coma.go.Entity.Event;
@@ -70,7 +69,7 @@ public class MyEventActivity extends AppCompatActivity {
     @SuppressLint("CheckResult")
     private void getList(){
         swipeRefreshLayout.setRefreshing(true);
-        App.getApp().getComponent().userApi().getMyEvents()
+        App.getApp().getComponent().webApi().getMyEvents()
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::subscribe,

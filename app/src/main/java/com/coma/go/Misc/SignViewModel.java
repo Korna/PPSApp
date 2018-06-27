@@ -1,26 +1,16 @@
 package com.coma.go.Misc;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.coma.go.Dagger.Misc.SessionModule;
 import com.coma.go.Utils.Logger;
 import com.coma.go.Utils.ParseResponse;
-import com.coma.go.Utils.ViewUtils;
-import com.coma.go.View.User.OptionsActivity;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 import retrofit2.Response;
 
 
@@ -42,7 +32,7 @@ public class SignViewModel  {
 
     @SuppressLint("CheckResult")
     public static void refreshFCM(){
-        App.getApp().getComponent().userApi()
+        App.getApp().getComponent().webApi()
                 .refreshFcmToken(getFCMToken())
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(App.getApp().getNetworkScheduler())
@@ -85,12 +75,10 @@ public class SignViewModel  {
 
     private void subscribe(String session, Context context) {
         if(session.equals("")){
-        //    sendErrorToView(new Exception("Cant get session from server"));
             Logger.e("errorAccepted", " :" + session);
         }else{
             saveSession(session, context);
 
-      //      getValueLiveData().postValue(new DataResponse<>(Status.SUCCESS, null));
 
             Log.d("accepted", " :" + session);
         }
@@ -99,11 +87,20 @@ public class SignViewModel  {
     public static void saveSession(String session, Context context){
         PreferencesHandler preferencesHandler = new PreferencesHandler(context);
         preferencesHandler.putValueSession(session);
+        rebuildDagger(session);
+    }
 
+    public static void saveCredi(String email, String pass, Context context){
+        PreferencesHandler preferencesHandler = new PreferencesHandler(context);
+        preferencesHandler.putUsername(email);
+        preferencesHandler.putPassword(pass);
+    }
+
+    public static void rebuildDagger(String session){
         App.getApp().setAppComponent(App.getApp()
-                        .rebuildComponent()
-                        .sessionModule(new SessionModule(session))
-                        .build());
+                .rebuildComponent()
+                .sessionModule(new SessionModule(session))
+                .build());
     }
 
     private String mapError(Throwable throwable) {
@@ -120,7 +117,7 @@ public class SignViewModel  {
     }
 
   /*  public static Observable<Response<Void>> sendNewFcmServerToken(String token){
-        return App.getApp().getComponent().userApi()
+        return App.getApp().getComponent().webApi()
                 .updateFCMToken(token)
                 .observeOn(App.getApp().getNetworkScheduler())
                 .observeOn(App.getApp().getNetworkScheduler());

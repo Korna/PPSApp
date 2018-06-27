@@ -32,8 +32,6 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class MapDialog extends DialogFragment implements OnMapReadyCallback {
-
-
     public MapDialog() {}
 
     @BindView(R.id.map)
@@ -42,9 +40,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     LatLng latLng = null;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             Double lat = this.getArguments().getDouble("lat");
             Double lon = this.getArguments().getDouble("lon");
@@ -61,8 +57,6 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-
-
         mMapView.getMapAsync(this);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume(); // needed to get the map to display immediately
@@ -76,8 +70,6 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-
         try {
 
             if(checkPermission())
@@ -88,15 +80,9 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         }catch (SecurityException se){
             Log.e("onMapReady", se.toString());
         }
-        try {
-
-
 
             if(latLng != null){
                    mMap.addMarker(new MarkerOptions().position(latLng).title("The place"));
-                //   mMap.addMarker(new MarkerOptions().position(sydney2).title( listNames.get(1) ));
-
-
                 CameraPosition cameraPosition;
                 try {
                     cameraPosition = new CameraPosition.Builder().target(latLng).zoom(18).bearing(0).tilt(0).build();
@@ -107,12 +93,6 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
 
 
             }
-
-        }catch (ArrayIndexOutOfBoundsException abe){
-            Log.e("onMapReadyListLoad", abe.toString());
-        }
-
-
 
     }
 

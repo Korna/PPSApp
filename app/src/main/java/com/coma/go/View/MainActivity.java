@@ -20,7 +20,6 @@ import android.view.MenuItem;
 
 import com.coma.go.Custom.Adapters.EventAdapter;
 import com.coma.go.Entity.Event;
-import com.coma.go.Entity.Options;
 import com.coma.go.Misc.App;
 import com.coma.go.Misc.SignViewModel;
 import com.coma.go.R;
@@ -28,7 +27,6 @@ import com.coma.go.View.User.CreatedEventActivity;
 import com.coma.go.View.User.MyEventActivity;
 import com.coma.go.View.User.MyProfileActivity;
 import com.coma.go.View.User.NewEventActivity;
-import com.coma.go.View.User.NewLoginActivity;
 import com.coma.go.View.User.OptionsActivity;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -113,7 +111,7 @@ public class MainActivity extends AppCompatActivity
     @SuppressLint("CheckResult")
     private void getList(){
         swipeRefreshLayout.setRefreshing(true);
-        App.getApp().getComponent().userApi().getNotes()
+        App.getApp().getComponent().webApi().getNotes()
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::subscribe,
@@ -172,12 +170,12 @@ public class MainActivity extends AppCompatActivity
         switch(id){
             case R.id.nav_dialogs:
                 intent = new Intent(MainActivity.this, DialogsActivity.class);
-
                 break;
             case R.id.nav_quit:
                 SignViewModel.saveSession("", this);
+                SignViewModel.saveCredi("", "", this);
                 finish();
-                intent = new Intent(MainActivity.this, NewLoginActivity.class);
+                intent = new Intent(MainActivity.this, LoginActivity.class);
                 break;
             case R.id.nav_slideshow:
                 intent = new Intent(MainActivity.this, CreatedEventActivity.class);

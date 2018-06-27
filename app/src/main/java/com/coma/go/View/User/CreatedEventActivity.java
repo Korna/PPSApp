@@ -69,7 +69,7 @@ public class CreatedEventActivity extends AppCompatActivity {
     @SuppressLint("CheckResult")
     private void getList(){
         swipeRefreshLayout.setRefreshing(true);
-        App.getApp().getComponent().userApi().getCreatedEvents()
+        App.getApp().getComponent().webApi().getCreatedEvents()
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::subscribe,

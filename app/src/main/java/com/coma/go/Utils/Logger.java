@@ -9,7 +9,7 @@ import com.crashlytics.android.Crashlytics;
  */
 
 public class Logger {
-    private static boolean DEBUG =  true;// world.proteus.proteusapp.BuildConfig.DEBUG;
+    private static boolean DEBUG = true;//BuildConfig.DEBUG;
 
     public static void i(String tag, String msg){
         if(DEBUG)
@@ -43,6 +43,11 @@ public class Logger {
         if(DEBUG)
             Log.w(tag,"" +  msg);
         logToCrashlytics(Log.WARN, tag, "" + msg);
+    }
+    public static void w(String tag, Throwable throwable){
+        if(DEBUG)
+            Log.w(tag,"" +  throwable.getMessage());
+        logToCrashlytics(Log.WARN, tag, "" + throwable.getMessage());
     }
 
     public static void e(String tag, String msg){
@@ -82,16 +87,16 @@ public class Logger {
 
     private static void logToCrashlytics(Throwable throwable){
         try{
-            Crashlytics.logException(throwable);
+            //  Crashlytics.logException(throwable);
         }catch (Exception e){
-            wtf("logToCrash", e.toString());
+            Log.e("logToCrash", e.toString());
         }
     }
     private static void logToCrashlytics(int code, String tag, String msg){
         try{
-            Crashlytics.log(code, tag, "" + msg);
+            //  Crashlytics.log(code, tag, "" + msg);
         }catch (Exception e){
-            wtf("logToCrash", e.toString());
+            Log.e("logToCrash", e.toString());
         }
     }
 

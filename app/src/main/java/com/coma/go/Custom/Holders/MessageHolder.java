@@ -30,9 +30,6 @@ public class MessageHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-
-
-
     public void bind(Message item){
         if(item != null) {
 

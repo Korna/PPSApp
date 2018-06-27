@@ -13,14 +13,11 @@ import android.widget.RelativeLayout;
 
 import com.coma.go.Dagger.Misc.SessionModule;
 import com.coma.go.Misc.App;
-import com.coma.go.Misc.PreferencesHandler;
 import com.coma.go.Misc.SignViewModel;
 import com.coma.go.R;
 import com.coma.go.Utils.Logger;
 import com.coma.go.Utils.ParseResponse;
 import com.coma.go.View.MainActivity;
-import com.coma.go.Web.MyFirebaseInstanceIdService;
-import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,8 +67,7 @@ public class NewLoginActivity extends AppCompatActivity {
         //вызываем функцию отправки запроса о верности данных
         signUp(email, pass);
         //очищаем поля
-        textEmail.setText("");
-        textPass.setText("");
+
     }
 
     private void clickSignIn(){
@@ -79,8 +75,8 @@ public class NewLoginActivity extends AppCompatActivity {
         String pass = textPass.getText().toString();
         signIn(email, pass);
         //очищаем поля
-        textEmail.setText("");
-        textPass.setText("");
+       // textEmail.setText("");
+       // textPass.setText("");
 
 
     }
@@ -88,7 +84,7 @@ public class NewLoginActivity extends AppCompatActivity {
     private void signIn(String email, String password){
         String fcmToken = SignViewModel.getFCMToken();
 
-        App.getApp().getComponent().userApi()
+        App.getApp().getComponent().webApi()
                 .login(email, password, fcmToken)
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(App.getApp().getNetworkScheduler())
@@ -113,7 +109,7 @@ public class NewLoginActivity extends AppCompatActivity {
 
     @SuppressLint("CheckResult")
     private void signUp(String email, String password){
-        App.getApp().getComponent().userApi().signup(email, password)
+        App.getApp().getComponent().webApi().signup(email, password)
                 .subscribeOn(App.getApp().getNetworkScheduler())
                 .observeOn(App.getApp().getNetworkScheduler())
                 .map(response ->  {
@@ -138,6 +134,8 @@ public class NewLoginActivity extends AppCompatActivity {
         if(session.equals("")){
            // sendErrorToView(new Exception("Cant get session from server"));
             Logger.e("errorAccepted", " :" + session);
+            textEmail.setText("");
+            textPass.setText("");
         }else{
             saveSession(session, getApplication());
             Intent intent = new Intent(this, MainActivity.class);
